@@ -18,6 +18,7 @@ import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -53,8 +54,10 @@ public class AuthService {
 
 
     public Session refresh(RefreshRequest refreshRequest) {
-        var id = refreshRequest.getRefreshToken();
+        var id = UUID.fromString(refreshRequest.getRefreshToken());
         var sessionEntity = sessionRepository.findById(id).get();
+        if (!sessionEntity.getUserEntity().getUsername().equals(refreshRequest.getUsername()))
+            throw new RuntimeException("Usernames don't match");
 
         return sessionEntityToResponse(sessionEntity);
     }
@@ -74,12 +77,14 @@ public class AuthService {
                 .subject(userEntity.getId().toString())
                 .claim(rolesClaims, roles)
                 .build();
-        var bearerToken = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+        var accessToken = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
         var refreshToken = sessionEntity.getId();
 
         return Session.builder()
-                .bearerToken(bearerToken)
                 .refreshToken(refreshToken)
+                .accessToken(accessToken)
+                .expiresIn(expire)
+                .tokenType("Bearer")
                 .build();
     }
 

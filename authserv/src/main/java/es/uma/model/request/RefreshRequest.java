@@ -1,10 +1,11 @@
 package es.uma.model.request;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Value;
-
-import java.util.UUID;
 
 @Value
 public class RefreshRequest {
-    UUID refreshToken;
+    @JsonProperty("refresh_token")
+    String refreshToken;
+    String username;
 }
