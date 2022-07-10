@@ -1,11 +1,11 @@
 package es.uma.model;
 
-import lombok.Data;
+import lombok.Builder;
+import lombok.Value;
 
-import java.util.Date;
-
-@Data
+@Value
+@Builder
 public class Session {
-    private String id;
-    private Date expires;
+    String bearerToken;
+    String refreshToken;
 }

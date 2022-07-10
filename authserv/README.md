@@ -1,0 +1,1 @@
+Created following https://github.com/Yoh0xFF/java-spring-security-example
