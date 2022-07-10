@@ -48,6 +48,19 @@ public class AuthService {
         sessionEntity.setUserEntity(userEntity);
         sessionEntity = sessionRepository.save(sessionEntity);
 
+        return sessionEntityToResponse(sessionEntity);
+    }
+
+
+    public Session refresh(RefreshRequest refreshRequest) {
+        var id = refreshRequest.getRefreshToken();
+        var sessionEntity = sessionRepository.findById(id).get();
+
+        return sessionEntityToResponse(sessionEntity);
+    }
+
+    private Session sessionEntityToResponse(SessionEntity sessionEntity) {
+        var userEntity = sessionEntity.getUserEntity();
         var roles = userEntity.getRoleEntityList()
                 .stream()
                 .map(RoleEntity::getName)
@@ -62,7 +75,7 @@ public class AuthService {
                 .claim(rolesClaims, roles)
                 .build();
         var bearerToken = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
-        var refreshToken = sessionEntity.getId().toString();
+        var refreshToken = sessionEntity.getId();
 
         return Session.builder()
                 .bearerToken(bearerToken)
@@ -79,10 +92,4 @@ public class AuthService {
         userEntity.setPassword(password);
         userRepository.save(userEntity);
     }
-
-    public Session refresh(RefreshRequest refreshRequest) {
-        // TODO
-        return null;
-    }
-
 }

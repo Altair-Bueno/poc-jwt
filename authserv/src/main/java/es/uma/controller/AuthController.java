@@ -27,8 +27,7 @@ public class AuthController {
     }
 
     @PostMapping("/refresh")
-    public String refresh(@RequestBody RefreshRequest refreshRequest) {
-        // TODO
-        return "Foo";
+    public Session refresh(@RequestBody RefreshRequest refreshRequest) {
+        return authService.refresh(refreshRequest);
     }
 }
