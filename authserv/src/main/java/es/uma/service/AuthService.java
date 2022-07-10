@@ -37,6 +37,9 @@ public class AuthService {
     @Value("${jwt.claims.expire}")
     private Long expire;
 
+    @Value("${jwt.claims.rolesClaims}")
+    private String rolesClaims;
+
 
     public Session login(LoginRequest loginRequest) {
         var userEntity = userRepository.findUserEntityByUsername(loginRequest.getUsername()).get();
@@ -56,7 +59,7 @@ public class AuthService {
                 .issuedAt(now)
                 .expiresAt(now.plusSeconds(expire))
                 .subject(userEntity.getId().toString())
-                .claim("roles", roles)
+                .claim(rolesClaims, roles)
                 .build();
         var bearerToken = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
         var refreshToken = sessionEntity.getId().toString();

@@ -36,6 +36,8 @@ public class SecurityConfig {
     private RSAPublicKey rsaPublicKey;
     @Value("${jwt.private.key}")
     private RSAPrivateKey rsaPrivateKey;
+    @Value("${jwt.claims.rolesClaims}")
+    private String rolesClaims;
 
     /**
      * CORS configuration
@@ -58,7 +60,7 @@ public class SecurityConfig {
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-        jwtGrantedAuthoritiesConverter.setAuthoritiesClaimName("roles");
+        jwtGrantedAuthoritiesConverter.setAuthoritiesClaimName(rolesClaims);
         jwtGrantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
 
         JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
