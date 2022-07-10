@@ -1,5 +1,6 @@
 package es.uma.service;
 
+import es.uma.entity.RoleEntity;
 import es.uma.entity.SessionEntity;
 import es.uma.entity.UserEntity;
 import es.uma.model.LoginRequest;
@@ -17,6 +18,7 @@ import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.stream.Collectors;
 
 @Service
 public class AuthService {
@@ -43,13 +45,18 @@ public class AuthService {
         sessionEntity.setUserEntity(userEntity);
         sessionEntity = sessionRepository.save(sessionEntity);
 
+        var roles = userEntity.getRoleEntityList()
+                .stream()
+                .map(RoleEntity::getName)
+                .collect(Collectors.toList());
+
         var now = Instant.now();
         var claims = JwtClaimsSet.builder()
                 .issuer(issuer)
                 .issuedAt(now)
                 .expiresAt(now.plusSeconds(expire))
                 .subject(userEntity.getId().toString())
-                //.claim("roles", scope)
+                .claim("roles", roles)
                 .build();
         var bearerToken = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
         var refreshToken = sessionEntity.getId().toString();
