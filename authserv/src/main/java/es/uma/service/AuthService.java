@@ -46,7 +46,7 @@ public class AuthService {
 
         var userEntity = userRepository.findById(user.getId()).get();
         var sessionEntity = new SessionEntity();
-        sessionEntity.setUserByUserId(userEntity);
+        sessionEntity.setUserEntity(userEntity);
         sessionEntity = sessionRepository.save(sessionEntity);
 
         var now = Instant.now();
