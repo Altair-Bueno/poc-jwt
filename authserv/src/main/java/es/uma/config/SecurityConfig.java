@@ -10,6 +10,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,10 +18,6 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
-import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
-import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationEntryPoint;
-import org.springframework.security.oauth2.server.resource.web.access.BearerTokenAccessDeniedHandler;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -29,6 +26,9 @@ import org.springframework.web.filter.CorsFilter;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 
+/**
+ * Configures `spring-security`
+ */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -37,6 +37,11 @@ public class SecurityConfig {
     @Value("${jwt.private.key}")
     private RSAPrivateKey rsaPrivateKey;
 
+    /**
+     * CORS configuration
+     *
+     * @return A configured CorsFilter
+     */
     @Bean
     public CorsFilter getCorsFilter() {
         var source = new UrlBasedCorsConfigurationSource();
@@ -49,11 +54,33 @@ public class SecurityConfig {
         return new CorsFilter(source);
     }
 
+    /**
+     * Provides an AuthenticationManager instance, useful for manual validation
+     *
+     * @param authenticationConfiguration AuthenticationConfiguration
+     * @return Default AuthenticationManager
+     * @throws Exception _
+     */
     @Bean
     public AuthenticationManager getAuthenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
+    /**
+     * Defines the `spring-security` filter chain
+     *
+     * <ul>
+     *     <li>Enables CORS</li>
+     *     <li>Disables CSRF</li>
+     *     <li>Sets session management to stateless</li>
+     *     <li>Sets up authentication polices</li>
+     *     <li>Sets up oauth2Resource server for JWT</li>
+     * </ul>
+     *
+     * @param http HttpSecurity builder
+     * @return A configured SecurityFilterChain
+     * @throws Exception _
+     */
     @Bean
     public SecurityFilterChain getSecurityFilterChain(HttpSecurity http) throws Exception {
         return http
@@ -61,20 +88,21 @@ public class SecurityConfig {
                 .cors().and().csrf().disable()
                 // Set session management to stateless
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                // Set unauthorized request exception handler
-                .exceptionHandling()
-                .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint())
-                .accessDeniedHandler(new BearerTokenAccessDeniedHandler()).and()
                 // Set endpoint permissions
                 .authorizeRequests()
                 .antMatchers("/auth/*").permitAll()
                 .antMatchers("/util/health").permitAll()
                 .anyRequest().authenticated().and()
                 // JWT token filter
-                .oauth2ResourceServer().jwt().and().and()
+                .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
                 .build();
     }
 
+    /**
+     * Defines the JWTEncoder bean
+     *
+     * @return A configured JWT encoder
+     */
     @Bean
     public JwtEncoder getJwtEncoder() {
         var jwk = new RSAKey.Builder(this.rsaPublicKey)
@@ -84,23 +112,21 @@ public class SecurityConfig {
         return new NimbusJwtEncoder(jwks);
     }
 
+    /**
+     * Defines the JWTDecoder bean
+     *
+     * @return A configured JWT decoder
+     */
     @Bean
     public JwtDecoder getJwtDecoder() {
         return NimbusJwtDecoder.withPublicKey(this.rsaPublicKey).build();
     }
 
-    @Bean
-    public JwtAuthenticationConverter getJwtAuthenticationConverter() {
-        var jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-        jwtGrantedAuthoritiesConverter.setAuthoritiesClaimName("roles");
-        jwtGrantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
-
-        var jwtAuthenticationConverter = new JwtAuthenticationConverter();
-        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);
-        return jwtAuthenticationConverter;
-
-    }
-
+    /**
+     * Defines the Password encoder bean
+     *
+     * @return A configured password encoder
+     */
     @Bean
     public PasswordEncoder getPasswordEncoder() {
         return new BCryptPasswordEncoder(11);
