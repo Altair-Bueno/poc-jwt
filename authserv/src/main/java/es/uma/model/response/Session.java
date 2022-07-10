@@ -1,4 +1,4 @@
-package es.uma.model;
+package es.uma.model.response;
 
 import lombok.Builder;
 import lombok.Value;

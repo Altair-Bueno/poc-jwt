@@ -1,9 +1,9 @@
 package es.uma.controller;
 
-import es.uma.model.LoginRequest;
-import es.uma.model.RefreshRequest;
-import es.uma.model.RegisterRequest;
-import es.uma.model.Session;
+import es.uma.model.request.LoginRequest;
+import es.uma.model.request.RefreshRequest;
+import es.uma.model.request.RegisterRequest;
+import es.uma.model.response.Session;
 import es.uma.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;

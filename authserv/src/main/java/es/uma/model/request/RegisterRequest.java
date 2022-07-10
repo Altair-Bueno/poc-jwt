@@ -1,8 +1,8 @@
-package es.uma.model;
+package es.uma.model.request;
 
-import lombok.Data;
+import lombok.Value;
 
-@Data
+@Value
 public class RegisterRequest {
     String username;
     String password;
