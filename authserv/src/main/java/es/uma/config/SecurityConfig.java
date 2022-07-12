@@ -36,8 +36,6 @@ public class SecurityConfig {
     @Value("${jwt.claims.rolesClaims}")
     private String rolesClaims;
 
-    // Extract Spring authorities from the roles claims
-
     /**
      * Provides a JwtAuthenticationConverter bean. This is used by the
      * oauth2ResourceServer to extract Spring Authorities from the JWT token
