@@ -83,8 +83,11 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 // Set endpoint permissions
                 .authorizeRequests()
-                .antMatchers("/auth/*").permitAll()
-                .antMatchers("/util/health").permitAll()
+                .antMatchers(
+                        "/auth/login",
+                        "/auth/register",
+                        "/auth/refresh"
+                ).permitAll()
                 .anyRequest().authenticated().and()
                 // JWT token filter. Requires a JWTDecoder bean
                 .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
