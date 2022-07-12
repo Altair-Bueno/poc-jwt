@@ -1,18 +1,17 @@
-const endpoints =  {
-    springPing: "http://localhost:9000",
-    authServ: "http://localhost:8000"
-}
+import config from "./config";
+
+const {endpoints} = config
 
 export type Credentials = {
     username: string,
     password: string
 }
 
-export interface JWTSession  {
-    access_token:string,
-    refresh_token:string,
-    token_type:string,
-    expires_in:string,
+export interface JWTSession {
+    access_token: string,
+    refresh_token: string,
+    token_type: string,
+    expires_in: string,
 }
 
 export async function checkAuth(session: JWTSession) {
@@ -34,7 +33,7 @@ export async function checkAuth(session: JWTSession) {
     }
 }
 
-export async function register(credentials: Credentials){
+export async function register(credentials: Credentials) {
     const url = `${endpoints.authServ}/auth/register`
     const request = {
         body: JSON.stringify(credentials),
@@ -75,7 +74,7 @@ export async function refresh(session: JWTSession) {
     }
 }
 
-export async function login(credentials:Credentials) {
+export async function login(credentials: Credentials) {
     const url = `${endpoints.authServ}/auth/login`
     const request = {
         body: JSON.stringify(credentials),
