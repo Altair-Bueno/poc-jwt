@@ -26,6 +26,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain getSecurityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
+                .cors().and()
+                .csrf().disable()
                 // Set session management to stateless
                 .sessionManagement((x)->x.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 // Require authentication on all requests
