@@ -24,7 +24,7 @@ import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 
 /**
- * Configures `spring-security`
+ * Configures Spring Security
  */
 @Configuration
 @EnableWebSecurity
@@ -37,6 +37,13 @@ public class SecurityConfig {
     private String rolesClaims;
 
     // Extract Spring authorities from the roles claims
+
+    /**
+     * Provides a JwtAuthenticationConverter bean. This is used by the
+     * oauth2ResourceServer to extract Spring Authorities from the JWT token
+     *
+     * @return A configured JwtAuthenticationConverter
+     */
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
@@ -53,10 +60,10 @@ public class SecurityConfig {
      *
      * <ul>
      *     <li>Allows CORS preflights</a></li>
-     *     <li>Disable CSRF</li>
-     *     <li>Sets session management to stateless</li>
-     *     <li>Sets up authentication polices</li>
-     *     <li>Sets up oauth2Resource server for JWT</li>
+     *     <li>Disables CSRF</li>
+     *     <li>Switch session management to stateless</li>
+     *     <li>Defines authentication policies for different endpoints</li>
+     *     <li>Sets up oauth2ResourceServer for JWT</li>
      * </ul>
      *
      * @param http HttpSecurity builder
@@ -79,14 +86,15 @@ public class SecurityConfig {
                 .antMatchers("/auth/*").permitAll()
                 .antMatchers("/util/health").permitAll()
                 .anyRequest().authenticated().and()
-                // JWT token filter
+                // JWT token filter. Requires a JWTDecoder bean
                 .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
                 .build();
     }
 
     /**
-     * Defines the JWTEncoder bean
+     * Provides the JWTEncoder bean
      *
+     * @see es.uma.service.AuthService
      * @return A configured JWT encoder
      */
     @Bean
@@ -99,7 +107,8 @@ public class SecurityConfig {
     }
 
     /**
-     * Defines the JWTDecoder bean
+     * Provides the JWTDecoder bean. This will be used by the
+     * oauth2ResourceServer
      *
      * @return A configured JWT decoder
      */
@@ -109,8 +118,9 @@ public class SecurityConfig {
     }
 
     /**
-     * Defines the Password encoder bean
+     * Provides the Password encoder bean.
      *
+     * @see es.uma.service.AuthService
      * @return A configured password encoder
      */
     @Bean

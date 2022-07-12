@@ -70,14 +70,15 @@ public class AuthService {
                 .collect(Collectors.toList());
 
         var now = Instant.now();
-        var claims = JwtClaimsSet.builder()
+        // https://jwt.io
+        var jwtClaimsSet = JwtClaimsSet.builder()
                 .issuer(issuer)
                 .issuedAt(now)
                 .expiresAt(now.plusSeconds(expire))
                 .subject(userEntity.getId().toString())
                 .claim(rolesClaims, roles)
                 .build();
-        var accessToken = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+        var accessToken = jwtEncoder.encode(JwtEncoderParameters.from(jwtClaimsSet)).getTokenValue();
         var refreshToken = sessionEntity.getId();
 
         return Session.builder()
