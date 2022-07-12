@@ -19,9 +19,6 @@ import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
 
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
@@ -39,24 +36,7 @@ public class SecurityConfig {
     @Value("${jwt.claims.rolesClaims}")
     private String rolesClaims;
 
-    /**
-     * CORS configuration
-     *
-     * @return A configured CorsFilter
-     */
-    @Bean
-    public CorsFilter getCorsFilter() {
-        var source = new UrlBasedCorsConfigurationSource();
-        var config = new CorsConfiguration();
-        config.setAllowCredentials(true);
-        config.addAllowedOrigin("*");
-        config.addAllowedHeader("*");
-        config.addAllowedMethod("*");
-        source.registerCorsConfiguration("/**", config);
-        return new CorsFilter(source);
-    }
-
-    // Extract authorities from the roles claim
+    // Extract Spring authorities from the roles claims
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
@@ -72,8 +52,8 @@ public class SecurityConfig {
      * Defines the `spring-security` filter chain
      *
      * <ul>
-     *     <li>Enables CORS</li>
-     *     <li>Disables CSRF</li>
+     *     <li>Allows CORS preflights</a></li>
+     *     <li>Disable CSRF</li>
      *     <li>Sets session management to stateless</li>
      *     <li>Sets up authentication polices</li>
      *     <li>Sets up oauth2Resource server for JWT</li>
@@ -86,8 +66,12 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain getSecurityFilterChain(HttpSecurity http) throws Exception {
         return http
-                // Enable CORS and disable CSRF
-                .cors().and().csrf().disable()
+                // Enable Spring Security CORS filter. This allows preflight request (HTTP OPTIONS) to
+                // pass thought Spring Security Filters
+                // Fix 401: https://www.baeldung.com/spring-security-cors-preflight
+                .cors().and()
+                // Disable CSRF
+                .csrf().disable()
                 // Set session management to stateless
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 // Set endpoint permissions
