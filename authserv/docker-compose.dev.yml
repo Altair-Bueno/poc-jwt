@@ -1,0 +1,11 @@
+# Author: Altair Bueno
+version: '3.1'
+services:
+  postgres:
+    image: postgres:14.4-alpine
+    volumes:
+      - ./sql/scheme.sql:/docker-entrypoint-initdb.d/01.sql
+      - postgres-data:/var/lib/postgresql/data
+
+volumes:
+  postgres-data:
