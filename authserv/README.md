@@ -1,5 +1,7 @@
 # JWT Spring Authentication Server
 
+Learn more about the provided endpoints [here](openapi.yaml)
+
 Created using the following resources
 
 - <https://github.com/Yoh0xFF/java-spring-security-example>

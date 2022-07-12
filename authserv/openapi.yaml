@@ -1,0 +1,78 @@
+openapi: 3.1.0
+info:
+  title: JWT Authserv
+  version: 0.0.1-SNAPSHOT
+  description: |
+    SSO service based on JWT
+paths:
+  /auth/login:
+    post:
+      summary: "Creates a new session"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BasicAuth"
+      responses:
+        "200":
+          description: Returns the session object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Session"
+          "401":
+            $ref: "#/components/responses/UnauthorisedResponse"
+  /auth/check:
+    get:
+      summary: Check if the user is logged in
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: The user is logged in
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CheckResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorisedResponse"
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  responses:
+    UnauthorisedResponse:
+          description: Access token is missing or invalid
+  schemas:
+    BasicAuth:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+    Session:
+      type: object
+      properties:
+        access_token:
+          type: string
+        refresh_token:
+          type: string
+        expires_in:
+          type: number
+        token_type:
+          type: string
+          enum: ["Bearer"]
+    CheckResponse:
+      type: object
+      properties:
+        name:
+          type: string
+        authorities:
+          type: array
+          items:
+            type: string
