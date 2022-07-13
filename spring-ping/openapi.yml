@@ -1,0 +1,47 @@
+openapi: 3.0.0
+info:
+  title: Spring Ping
+  version: 0.0.1-SNAPSHOT
+  description: |
+    Provides ping responses for authorised users
+servers:
+  - url: http://localhost:9000
+    description: Development server
+security:
+  - bearer: []
+paths:
+  /:
+    get:
+      summary: Responds to authorised users with a predefined message
+      responses:
+        "200":
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+                enum: ["Hello from Spring ping!"]
+        "401":
+          $ref: "#/components/responses/unauthorised"
+
+    post:
+      summary: Responds to authorised users using the same request body
+      responses:
+        "200":
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+        "401":
+          $ref: "#/components/responses/unauthorised"
+
+components:
+  securitySchemes:
+    bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  responses:
+    unauthorised:
+      description: "Unauthorised: Access token is missing or invalid"

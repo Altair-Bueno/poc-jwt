@@ -1,12 +1,8 @@
 # JWT Spring Authentication Server
 
-Learn more about the provided endpoints [here](openapi.yaml)
+SSO service based on JWT. 
 
-Created using the following resources
-
-- <https://github.com/Yoh0xFF/java-spring-security-example>
-- <https://github.com/spring-projects/spring-security-samples/tree/main/servlet/spring-boot/java/jwt/login?rgh-link-date=2021-11-26T13%3A50%3A30Z>
-- <https://docs.spring.io/spring-security/reference/servlet/oauth2/resource-server/jwt.html>
+More information about the available endpoints [here](openapi.yaml)
 
 ## Build and development
 
@@ -51,4 +47,13 @@ building this application
 | SPRING_PROFILES_DEFAULT | Spring profile used                                         | `dev`         |
 
 > See more environment variables
-> on [Spring docs](https://docs.spring.io/spring-boot/docs/current/reference/html/application-properties.html)
+>
+on [Spring docs](https://docs.spring.io/spring-boot/docs/current/reference/html/application-properties.html)
+
+## More information
+
+Created using the following resources
+
+- <https://github.com/Yoh0xFF/java-spring-security-example>
+- <https://github.com/spring-projects/spring-security-samples/tree/main/servlet/spring-boot/java/jwt/login?rgh-link-date=2021-11-26T13%3A50%3A30Z>
+- <https://docs.spring.io/spring-security/reference/servlet/oauth2/resource-server/jwt.html>

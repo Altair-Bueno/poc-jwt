@@ -1,61 +1,111 @@
-openapi: 3.1.0
+openapi: 3.0.0
 info:
-  title: JWT Authserv
+  title: AuthServ
   version: 0.0.1-SNAPSHOT
   description: |
     SSO service based on JWT
+servers:
+  - url: http://localhost:8000
+    description: Development server
 paths:
   /auth/login:
     post:
-      summary: "Creates a new session"
+      summary: Obtain a JWT token using basic credentials
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/BasicAuth"
+              $ref: "#/components/schemas/basic"
       responses:
         "200":
-          description: Returns the session object
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Session"
-          "401":
-            $ref: "#/components/responses/UnauthorisedResponse"
+          $ref: "#/components/responses/session"
+        "401":
+          $ref: "#/components/responses/unauthorised"
+
+  /auth/register:
+    post:
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/register"
+      responses:
+        "200":
+          description: OK
+        "401":
+          $ref: "#/components/responses/unauthorised"
+
+  /auth/refresh:
+    post:
+      summary: Obtain a JWT token using a refresh token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/refresh"
+      responses:
+        "200":
+          $ref: "#/components/responses/session"
+        "401":
+          $ref: "#/components/responses/unauthorised"
+
   /auth/check:
     get:
       summary: Check if the user is logged in
       security:
-        - BearerAuth: []
+        - bearer: [ ]
       responses:
         "200":
-          description: The user is logged in
+          description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CheckResponse"
+                $ref: "#/components/schemas/check"
         "401":
-          $ref: "#/components/responses/UnauthorisedResponse"
+          $ref: "#/components/responses/unauthorised"
 
 components:
   securitySchemes:
-    BearerAuth:
+    bearer:
       type: http
       scheme: bearer
       bearerFormat: JWT
   responses:
-    UnauthorisedResponse:
-          description: Access token is missing or invalid
+    unauthorised:
+      description: "Unauthorised: Access token is missing or invalid"
+    session:
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/session"
   schemas:
-    BasicAuth:
+    basic:
       type: object
       properties:
         username:
           type: string
         password:
           type: string
-    Session:
+    register:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+    refresh:
+      type: object
+      properties:
+        refresh_token:
+          type: string
+        username:
+          type: string
+    session:
       type: object
       properties:
         access_token:
@@ -66,8 +116,8 @@ components:
           type: number
         token_type:
           type: string
-          enum: ["Bearer"]
-    CheckResponse:
+          enum: [ "Bearer" ]
+    check:
       type: object
       properties:
         name:
