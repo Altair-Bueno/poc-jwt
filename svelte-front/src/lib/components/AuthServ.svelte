@@ -50,7 +50,6 @@
     Authserver is in charge of authentication. It also provides an endpoint to
     check if the user is authorised or not
   </p>
-  <div />
   <form on:submit|preventDefault>
     <div class="mb-3">
       <label class="form-label" for="username">Username</label>
