@@ -1,0 +1,49 @@
+openapi: '3.0.2'
+info:
+  title: Axum transform
+  version: '0.0.1'
+servers:
+  - url: http://localhost:9100
+    description: Development server
+security:
+  - bearer: []
+
+paths:
+  /:
+    post:
+      summary: Apply some transformation function to the payload contents
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                transformation:
+                  type: string
+                  enum:
+                    - capitalize
+                data:
+                  type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: string
+                  took:
+                    type: number
+                    description: Number of miliseconds that this request took
+        '401':
+          description: "Unauthorised: Access token is missing or invalid"
+
+components:
+  securitySchemes:
+    bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
