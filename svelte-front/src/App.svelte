@@ -1,8 +1,8 @@
 <script lang="ts">
-    import {checkAuth, login, register, springPing} from "./lib/api.ts"
+    import {authServClient, springPingClient} from "./lib/config";
+    import {credentialStore, getExpireDate} from "./lib/credentials";
 
-    let credentials = {username: "", password: ""}
-    let session = undefined
+    let basic= {username: "", password: ""}
     let springPingContent = ''
 
     // TODO: ideally, use some sort of library that manages authentication
@@ -11,7 +11,7 @@
     // Handlers
     async function registerHandler() {
         try {
-            await register(credentials)
+            await authServClient.authRegisterPost(basic)
             displayBanner("Register successful")
         } catch (exception) {
             displayBanner("Register exception", exception)
@@ -20,7 +20,18 @@
 
     async function loginHandler() {
         try {
-            session = await login(credentials)
+            const response = await authServClient.authLoginPost(basic)
+            const session = response.data
+            console.log(session)
+            // Special Svelte syntax to set dynamic stores
+            $credentialStore = {
+                accessToken: {
+                    token: session.access_token,
+                    expires: getExpireDate(session.expires_in)
+                },
+                refreshToken: session.refresh_token,
+                username: basic.username
+            }
             displayBanner("Login successful")
         } catch (exception) {
             displayBanner("Login exception", exception)
@@ -29,7 +40,7 @@
 
     async function checkAuthHandler() {
         try {
-            await checkAuth(session)
+            await authServClient.authCheckGet()
             displayBanner("The user is authorised")
         } catch (exception) {
             displayBanner("The user is not authorised", exception)
@@ -38,8 +49,10 @@
 
     async function springPingHandler() {
         try {
-            const received = await springPing(session, springPingContent)
-            displayBanner(received)
+            const response = await springPingClient.rootPost(springPingContent)
+            const data = response.data
+            console.log(data)
+            displayBanner(data)
         } catch (exception) {
             displayBanner("Ping error", exception)
         }
@@ -47,7 +60,8 @@
 
     // Utility functions
     function displayBanner(message: string, exception?: Error) {
-        const kind = exception ? 'Error' : 'Alert'
+        const kind = exception ? 'Error' : 'Info'
+        if (exception) console.log(exception)
         alert(`[${kind}]: ${message} \n${exception ? exception : ""}`)
     }
 </script>
@@ -75,12 +89,12 @@
     <form on:submit|preventDefault>
       <div class="mb-3">
         <label class="form-label" for="username">Username</label>
-        <input bind:value={credentials.username} class="form-control" id="username"
+        <input bind:value={basic.username} class="form-control" id="username"
                type="text">
       </div>
       <div class="mb-3">
         <label class="form-label" for="password">Password</label>
-        <input bind:value={credentials.password} class="form-control" id="password"
+        <input bind:value={basic.password} class="form-control" id="password"
                type="text">
       </div>
     </form>
@@ -103,12 +117,12 @@
   <footer class="bg-cornflowerblue">
     <h4>Debug information</h4>
     <div>
-      username: {credentials?.username} <br>
-      password: {credentials?.password}
+      usernameField: {basic?.username} <br>
+      passwordField: {basic?.password}
     </div>
     <div>
-      bearer token: {session?.access_token} <br>
-      refresh token: {session?.refresh_token}
+      access token: {$credentialStore?.accessToken.token} <br>
+      refresh token: {$credentialStore?.refreshToken}
     </div>
   </footer>
 </div>
