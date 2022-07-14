@@ -7,6 +7,10 @@ import {
   DefaultApi as SpringPingDefaultApi,
 } from "../api/spring-ping";
 import {
+  Configuration as AxumTransformConfiguration,
+  DefaultApi as AxumTransformDefaultApi,
+} from "../api/axum-transform";
+import {
   Credentials,
   credentialStore,
   getExpires,
@@ -55,5 +59,12 @@ export const springPingClient = new SpringPingDefaultApi(
   new SpringPingConfiguration({
     accessToken: getToken,
     ...env.springPingConf,
+  })
+);
+
+export const axumTransformClient = new AxumTransformDefaultApi(
+  new AxumTransformConfiguration({
+    accessToken: getToken,
+    ...env.axumTransformConf,
   })
 );

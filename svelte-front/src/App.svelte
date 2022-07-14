@@ -3,6 +3,7 @@
   import SpringPing from "./lib/components/SpringPing.svelte";
   import AuthServ from "./lib/components/AuthServ.svelte";
   import { displayBanner } from "./lib/util";
+  import AxumTransform from "./lib/components/AxumTransform.svelte";
 
   function accessTokenToClipboard() {
     const accessToken = $credentialStore?.accessToken.token;
@@ -21,6 +22,7 @@
   </div>
   <AuthServ />
   <SpringPing />
+  <AxumTransform />
   <footer class="bg-cornflowerblue">
     <h4>Stores content</h4>
     <div>

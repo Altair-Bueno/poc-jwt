@@ -8,9 +8,10 @@
     "build": "vite build",
     "preview": "vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.json",
-    "api": "npm run api-authserv && npm run api-spring-ping",
+    "api": "npm run api-authserv && npm run api-spring-ping && npm run api-axum-transform",
     "api-authserv": "openapi-generator-cli generate -i ../authserv/openapi.yaml -g typescript-axios -o src/api/authserv",
     "api-spring-ping": "openapi-generator-cli generate -i ../spring-ping/openapi.yml -g typescript-axios -o src/api/spring-ping",
+    "api-axum-transform": "openapi-generator-cli generate -i ../axum-transform/openapi.yml -g typescript-axios -o src/api/axum-transform",
     "format": "prettier src package.json openapitools.json *.js *.md --write"
   },
   "devDependencies": {
