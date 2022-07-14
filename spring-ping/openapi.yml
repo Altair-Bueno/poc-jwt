@@ -17,7 +17,7 @@ paths:
         "200":
           description: OK
           content:
-            text/plain:
+            application/json:
               schema:
                 type: string
                 enum: ["Hello from Spring ping!"]
@@ -26,11 +26,16 @@ paths:
 
     post:
       summary: Responds to authorised users using the same request body
+      requestBody:
+        content:
+          application/json:
+              schema:
+                type: string
       responses:
         "200":
           description: OK
           content:
-            text/plain:
+            application/json:
               schema:
                 type: string
         "401":
