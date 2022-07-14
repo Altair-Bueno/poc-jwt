@@ -1,24 +1,32 @@
-import {writable} from 'svelte/store';
+import { writable } from "svelte/store";
+import env from "./env";
 
 export interface Credentials {
-    accessToken: {
-        token: string,
-        expires: Date
-    },
-    refreshToken: string,
-    username: string,
+  accessToken: {
+    token: string;
+    expires: number;
+  };
+  refreshToken: string;
+  username: string;
 }
 
-export function getExpireDate(seconds:number) {
-    return new Date(new Date().getTime() + seconds * 1000)
+const key = env.credentialsConf.key;
+const storedString = localStorage.getItem(key);
+const initialCredentials = storedString ? JSON.parse(storedString) : null;
+
+export const credentialStore = writable(
+  initialCredentials as null | Credentials
+);
+
+credentialStore.subscribe((credentials) => {
+  const s = credentials ? JSON.stringify(credentials) : null;
+  localStorage.setItem(key, s);
+});
+
+export function getExpires(seconds: number) {
+  return new Date().getTime() + seconds * 1000;
 }
-export function hasExpired(date:Date) {
-    const currentTime = new Date().getTime()
-    const expireTime = date.getTime()
-    return currentTime >= expireTime
+export function hasExpired(expires: number) {
+  const currentTime = new Date().getTime();
+  return currentTime >= expires;
 }
-
-export const credentialStore = writable(null as null | Credentials)
-
-
-

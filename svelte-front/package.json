@@ -7,11 +7,17 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "check": "svelte-check --tsconfig ./tsconfig.json"
+    "check": "svelte-check --tsconfig ./tsconfig.json",
+    "api": "npm run api-authserv && npm run api-spring-ping",
+    "api-authserv": "openapi-generator-cli generate -i ../authserv/openapi.yaml -g typescript-axios -o src/api/authserv",
+    "api-spring-ping": "openapi-generator-cli generate -i ../spring-ping/openapi.yml -g typescript-axios -o src/api/spring-ping",
+    "format": "prettier src package.json openapitools.json *.js *.md --write"
   },
   "devDependencies": {
+    "@openapitools/openapi-generator-cli": "^2.5.1",
     "@sveltejs/vite-plugin-svelte": "^1.0.0-next.30",
     "@tsconfig/svelte": "^2.0.1",
+    "prettier": "^2.7.1",
     "svelte": "^3.44.0",
     "svelte-check": "^2.2.7",
     "svelte-preprocess": "^4.10.7",

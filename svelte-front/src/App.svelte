@@ -1,12 +1,9 @@
 <script lang="ts">
     import {authServClient, springPingClient} from "./lib/config";
-    import {credentialStore, getExpireDate} from "./lib/credentials";
+    import {credentialStore, getExpires} from "./lib/credentials";
 
     let basic= {username: "", password: ""}
     let springPingContent = ''
-
-    // TODO: ideally, use some sort of library that manages authentication
-    // TODO: Store the JWT on localstorage/cookies
 
     // Handlers
     async function registerHandler() {
@@ -27,7 +24,7 @@
             $credentialStore = {
                 accessToken: {
                     token: session.access_token,
-                    expires: getExpireDate(session.expires_in)
+                    expires: getExpires(session.expires_in)
                 },
                 refreshToken: session.refresh_token,
                 username: basic.username
