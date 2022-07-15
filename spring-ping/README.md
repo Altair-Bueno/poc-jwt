@@ -1,6 +1,6 @@
 # Spring Ping
 
-Provides ping responses for authorised users. 
+Provides ping responses for authorized users. 
 
 More information about the available endpoints [here](openapi.yml)
 

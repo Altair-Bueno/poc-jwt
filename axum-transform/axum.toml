@@ -1,3 +1,6 @@
-# hostname = 'localhost'
+# Server ip address
+# hostname = '127.0.0.1'
+# Server port
 # port = 9100
+# Location of the RSA public key used to verify JWT tokens
 public_key = 'public.key'

@@ -17,6 +17,10 @@ npm install
 npm run api
 # Build the application
 npm run build
+# Run the development server
+npm run dev
+# Run Prettier
+npm run format
 ```
 
 ### Environment variables
