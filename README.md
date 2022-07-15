@@ -31,7 +31,8 @@ openssl pkcs8 -topk8 -inform PEM -outform PEM -nocrypt -in keypair.pem -out priv
 
 ## Example deployment: Docker compose
 
-A sample Docker compose is provided to test the service.
+A sample Docker compose is provided. `svelte-front` will be available at
+<http://localhost:8080>
 
 ```shell
 # To start the service

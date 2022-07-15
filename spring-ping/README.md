@@ -1,6 +1,6 @@
 # Spring Ping
 
-Provides ping responses for authorized users. 
+Provides ping responses for authorized users.
 
 More information about the available endpoints [here](openapi.yml)
 
@@ -24,5 +24,5 @@ building this application
 | JWT_CLAIMS_ROLESCLAIMS  | Claim name used to store all Spring roles                   | `roles`       |
 | SPRING_PROFILES_DEFAULT | Spring profile used                                         | `dev`         |
 
-> See more environment variables
-> on [Spring docs](https://docs.spring.io/spring-boot/docs/current/reference/html/application-properties.html)
+> See more environment variables on
+> [Spring docs](https://docs.spring.io/spring-boot/docs/current/reference/html/application-properties.html)
