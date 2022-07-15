@@ -1,11 +1,10 @@
 use axum::Json;
-use chrono::{Duration, Utc};
-use tokio::time::Instant;
+use chrono::Utc;
 
 use crate::{
     auth::JWTAuth,
     error::RequestResult,
-    model::{Transformation, TransformRequest, TransformResponse},
+    model::{TransformRequest, TransformResponse, Transformation},
 };
 
 pub async fn transform(
@@ -13,10 +12,13 @@ pub async fn transform(
     Json(request): Json<TransformRequest>,
 ) -> RequestResult<Json<TransformResponse>> {
     let took = Utc::now();
-    let TransformRequest{ transformation, data } = request;
+    let TransformRequest {
+        transformation,
+        data,
+    } = request;
 
     let data = match transformation {
-        Transformation::capitalize => data.to_uppercase(),
+        Transformation::Capitalize => data.to_uppercase(),
     };
 
     let took = took.signed_duration_since(Utc::now()).num_milliseconds() as _;

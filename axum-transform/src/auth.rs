@@ -1,14 +1,15 @@
-use std::{collections::HashSet, path::Path, str::FromStr, sync::Arc};
+use std::{collections::HashSet, path::Path, sync::Arc};
 
 use axum::{
     async_trait,
     extract::{FromRequest, RequestParts},
-    headers::{Authorization, authorization::Bearer},
+    headers::{authorization::Bearer, Authorization},
     TypedHeader,
 };
 use jsonwebtoken::{DecodingKey, Validation};
 use serde::{Deserialize, Serialize};
 use tokio::fs::read;
+use tracing::error;
 
 use crate::{
     error::{AuthenticationError, ConfigError, RequestError},
@@ -70,10 +71,14 @@ async fn authorise<B: Send>(req: &mut RequestParts<B>) -> Result<JWTAuth, Authen
     let TypedHeader(Authorization(bearer)) =
         TypedHeader::<Authorization<Bearer>>::from_request(req).await?;
 
-    let PublicKey { key } = req
-        .extensions()
-        .get()
-        .ok_or(AuthenticationError::MissingDecriptionKey)?;
+    let content = req.extensions().get::<PublicKey>();
+    let PublicKey { key } = match content {
+        Some(x)=>x,
+        None => {
+            error!("Unreachable statement. Missing Public Key");
+            panic!();
+        },
+    };
     let token = bearer.token();
     let validation = Validation::new(jsonwebtoken::Algorithm::RS256);
     let claims: Claims = jsonwebtoken::decode(token, key, &validation)?.claims;

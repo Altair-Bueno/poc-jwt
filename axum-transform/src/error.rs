@@ -1,5 +1,5 @@
 use axum::{
-    extract::rejection::TypedHeaderRejection, http::StatusCode, Json, response::IntoResponse,
+    extract::rejection::TypedHeaderRejection, http::StatusCode, response::IntoResponse, Json,
 };
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
@@ -9,13 +9,13 @@ pub type RequestResult<T> = std::result::Result<T, RequestError>;
 
 #[derive(Debug, Error)]
 pub enum ConfigError {
-    #[error("{0}")]
+    #[error(transparent)]
     IOerror(#[from] std::io::Error),
-    #[error("{0}")]
+    #[error(transparent)]
     KeyError(#[from] jsonwebtoken::errors::Error),
-    #[error("{0}")]
+    #[error(transparent)]
     FigmentError(#[from] figment::Error),
-    #[error("{0}")]
+    #[error(transparent)]
     ServerError(#[from] hyper::Error),
 }
 
@@ -23,15 +23,13 @@ pub enum ConfigError {
 pub enum AuthenticationError {
     #[error("Missing authentication header")]
     MissingAuthenticationHeader(#[from] TypedHeaderRejection),
-    #[error("Invalid token")]
+    #[error("Invalid token: {0}")]
     InvalidToken(#[from] jsonwebtoken::errors::Error),
-    #[error("Missing decriptionKey")]
-    MissingDecriptionKey,
 }
 
 #[derive(Debug, Error)]
 pub enum RequestError {
-    #[error("{0}")]
+    #[error(transparent)]
     Unauthorised(#[from] AuthenticationError),
 }
 

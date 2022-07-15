@@ -1,7 +1,9 @@
+#![allow(dead_code)]
+
 use std::net::SocketAddr;
 
+use axum::routing::post;
 use axum::{Extension, Router};
-use axum::routing::{get, post};
 use tower::ServiceBuilder;
 use tower_http::cors::CorsLayer;
 use tower_http::trace::TraceLayer;
@@ -44,14 +46,12 @@ async fn run() -> Result<(), ConfigError> {
 
     let public_key = PublicKey::new(public_key).await?;
 
-    let app = Router::new()
-        .route("/", post(controller::transform))
-        .layer(
-            ServiceBuilder::new()
-                .layer(TraceLayer::new_for_http())
-                .layer(CorsLayer::permissive())
-                .layer(Extension(public_key))
-        );
+    let app = Router::new().route("/", post(controller::transform)).layer(
+        ServiceBuilder::new()
+            .layer(TraceLayer::new_for_http())
+            .layer(CorsLayer::permissive())
+            .layer(Extension(public_key)),
+    );
 
     let socket_addr = SocketAddr::from((hostname, port));
     axum::Server::bind(&socket_addr)

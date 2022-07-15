@@ -1,6 +1,6 @@
 use figment::{
-    Figment,
     providers::{Env, Format, Toml},
+    Figment,
 };
 
 use crate::{config::Config, error::ConfigError};
