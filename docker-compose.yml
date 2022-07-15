@@ -21,7 +21,6 @@ services:
       JWT_PRIVATE_KEY: /private.key
       JWT_PUBLIC_KEY: /public.key
       JWT_CLAIMS_ISSUER: authserv
-      JWT_CLAIMS_EXPIRE: '60'
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/auth
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: password
