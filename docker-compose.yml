@@ -1,0 +1,60 @@
+version: "3.7"
+services:
+  postgres:
+    image: postgres:14.4-alpine
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: auth
+    volumes:
+      - ./authserv/sql/scheme.sql:/docker-entrypoint-initdb.d/01.sql
+      - postgres-data:/var/lib/postgresql/data
+
+  authserv:
+    build: authserv
+    container_name: authserv
+    volumes:
+      - ./public.key:/public.key
+      - ./private.key:/private.key
+    depends_on:
+      - postgres
+    environment:
+      JWT_PRIVATE_KEY: /private.key
+      JWT_PUBLIC_KEY: /public.key
+      JWT_CLAIMS_ISSUER: authserv
+      JWT_CLAIMS_EXPIRE: '60'
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/auth
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: password
+    ports:
+      - '8000:8000'
+  spring-ping:
+    build: spring-ping
+    container_name: spring-ping
+    volumes:
+      - ./public.key:/public.key
+    environment:
+      JWT_PUBLIC_KEY: /public.key
+    ports:
+      - '9000:9000'
+  axum-transform:
+    build: axum-transform
+    container_name: axum-transform
+    volumes:
+      - ./public.key:/public.key
+    environment:
+      AXUM_public_key: /public.key
+    ports:
+      - '9100:9100'
+  svelte-front:
+    container_name: svelte-front
+    build: 
+      context: svelte-front
+      args: 
+        VITE_AUTHSERV_URL: http://localhost:8000
+        VITE_SPRINGPING_URL: http://localhost:9000
+        VITE_AXUMTRANSFORM_URL: http://localhost:9100
+    ports: 
+      - '8080:80'
+
+volumes:
+  postgres-data:
