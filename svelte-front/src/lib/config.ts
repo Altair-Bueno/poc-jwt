@@ -19,32 +19,33 @@ import {
 import env from "./env";
 import { get } from "svelte/store";
 
-async function refreshCredentials(credentials: Credentials) {
+async function refreshCredentials(
+  credentials: Credentials
+): Promise<Credentials> {
   const conf = new AuthServConfiguration(env.authServConf);
   const client = new AuthServDefaultApi(conf);
+
+  const { refreshToken, username } = credentials;
   const response = await client.authRefreshPost({
-    username: credentials.username,
-    refresh_token: credentials.refreshToken,
+    username,
+    refresh_token: refreshToken,
   });
   const session = response.data;
 
-  credentialStore.update((x) => {
-    return {
-      accessToken: {
-        token: session.access_token,
-        expires: getExpires(session.expires_in),
-      },
-      ...x,
-    };
-  });
+  const expires = getExpires(session.expires_in - env.credentialsConf.margin);
+  const token = session.access_token;
+  const accessToken = { token, expires };
+
+  return { refreshToken, username, accessToken };
 }
 
 async function getToken(): Promise<string> {
-  const credentials = get(credentialStore);
+  let credentials = get(credentialStore);
   if (!credentials) throw Error("The user has not logged in");
 
   if (hasExpired(credentials.accessToken.expires)) {
-    await refreshCredentials(credentials);
+    credentials = await refreshCredentials(credentials);
+    credentialStore.set(credentials);
   }
   return credentials.accessToken.token;
 }

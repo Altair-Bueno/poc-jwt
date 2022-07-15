@@ -4,6 +4,9 @@
   import AuthServ from "./lib/components/AuthServ.svelte";
   import { displayBanner } from "./lib/util";
   import AxumTransform from "./lib/components/AxumTransform.svelte";
+  import { hasExpired } from "./lib/credentials.js";
+
+  let expired;
 
   function accessTokenToClipboard() {
     const accessToken = $credentialStore?.accessToken.token;
@@ -13,6 +16,12 @@
       displayBanner("The clipboard is empty", new Error());
     }
   }
+
+  function refreshExpired() {
+    expired = hasExpired($credentialStore?.accessToken.expires);
+  }
+
+  refreshExpired();
 </script>
 
 <div class="container">
@@ -27,7 +36,12 @@
     <h4>Stores content</h4>
     <div>
       access token: {$credentialStore?.accessToken.token} <br />
-      refresh token: {$credentialStore?.refreshToken}
+      refresh token: {$credentialStore?.refreshToken} <br />
+      Expires: {$credentialStore?.accessToken.expires &&
+        new Date($credentialStore?.accessToken.expires)}
+      <br />
+      Has expired? {expired}
+      <button on:click={refreshExpired}>Check</button>
     </div>
     <button on:click={accessTokenToClipboard} class="btn btn-primary"
       >Copy access token to clipboard
