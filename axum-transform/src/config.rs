@@ -27,7 +27,8 @@ pub struct JWT {
 #[derive(Debug, Serialize, Deserialize, Default)]
 pub enum LoadKind {
     #[default]
-    RSAPem
+    RSAPem,
+    ECPem,
 }
 
 pub type Loader = fn(&[u8]) -> Result<DecodingKey, jsonwebtoken::errors::Error>;
@@ -35,6 +36,7 @@ impl From<&LoadKind> for Loader {
     fn from(kind: &LoadKind) -> Self {
         match kind {
             LoadKind::RSAPem => DecodingKey::from_rsa_pem,
+            LoadKind::ECPem => DecodingKey::from_ec_pem,
         }
     }
 }
