@@ -1,4 +1,4 @@
-use axum::Json;
+use axum::{routing::post, Json, Router};
 use chrono::Utc;
 
 use crate::{
@@ -7,7 +7,11 @@ use crate::{
     model::{TransformRequest, TransformResponse, Transformation},
 };
 
-pub async fn transform(
+pub fn router() -> Router {
+    Router::new().route("/", post(transform))
+}
+
+async fn transform(
     _: Authentication,
     Json(request): Json<TransformRequest>,
 ) -> RequestResult<Json<TransformResponse>> {
