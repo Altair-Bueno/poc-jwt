@@ -21,7 +21,7 @@ pub struct JWT {
     #[serde(default = "default_algorithm")]
     pub algorithm: Algorithm,
     #[serde(default)]
-    pub kind: LoadKind
+    pub kind: LoadKind,
 }
 
 #[derive(Debug, Serialize, Deserialize, Default)]
@@ -40,7 +40,6 @@ impl From<&LoadKind> for Loader {
         }
     }
 }
-
 
 fn default_algorithm() -> Algorithm {
     Algorithm::RS256

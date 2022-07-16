@@ -6,7 +6,7 @@ use jsonwebtoken::{DecodingKey, Validation};
 use tokio::fs::read;
 
 use crate::{
-    config::{Config, JWT, Loader},
+    config::{Config, Loader, JWT},
     error::ConfigError,
 };
 
@@ -23,7 +23,9 @@ pub fn load_config() -> Result<Config> {
 
 pub async fn load_decoding_key(
     Config {
-        jwt: JWT { publickey, kind, .. },
+        jwt: JWT {
+            publickey, kind, ..
+        },
         ..
     }: &Config,
 ) -> Result<DecodingKey> {
@@ -36,7 +38,7 @@ pub async fn load_decoding_key(
 
 pub async fn load_validation(Config { jwt, .. }: &Config) -> Result<Validation> {
     let JWT { algorithm, .. } = jwt;
-    Ok(Validation::new(algorithm.clone()))
+    Ok(Validation::new(*algorithm))
 }
 
 pub fn init_logger() {
