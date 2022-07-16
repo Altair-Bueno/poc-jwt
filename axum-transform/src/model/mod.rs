@@ -1,9 +1,8 @@
-use enum_utils::FromStr;
 use serde::{Deserialize, Serialize};
 
-#[derive(FromStr, Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub enum Transformation {
-    #[enumeration(rename = "capitalize")]
+    #[serde(rename = "capitalize")]
     Capitalize,
 }
 

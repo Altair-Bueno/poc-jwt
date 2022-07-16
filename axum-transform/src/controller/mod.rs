@@ -1,3 +1,5 @@
+#[cfg(test)]
+mod test;
 use axum::{routing::post, Json, Router};
 use chrono::Utc;
 
