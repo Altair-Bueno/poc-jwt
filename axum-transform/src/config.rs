@@ -3,6 +3,7 @@ use std::{
     path::PathBuf,
 };
 
+use jsonwebtoken::{Algorithm, DecodingKey};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -11,7 +12,36 @@ pub struct Config {
     pub hostname: IpAddr,
     #[serde(default = "default_port")]
     pub port: u16,
-    pub public_key: PathBuf,
+    pub jwt: JWT,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct JWT {
+    pub publickey: PathBuf,
+    #[serde(default = "default_algorithm")]
+    pub algorithm: Algorithm,
+    #[serde(default)]
+    pub kind: LoadKind
+}
+
+#[derive(Debug, Serialize, Deserialize, Default)]
+pub enum LoadKind {
+    #[default]
+    RSAPem
+}
+
+pub type Loader = fn(&[u8]) -> Result<DecodingKey, jsonwebtoken::errors::Error>;
+impl From<&LoadKind> for Loader {
+    fn from(kind: &LoadKind) -> Self {
+        match kind {
+            LoadKind::RSAPem => DecodingKey::from_rsa_pem,
+        }
+    }
+}
+
+
+fn default_algorithm() -> Algorithm {
+    Algorithm::RS256
 }
 
 fn default_hostname() -> IpAddr {

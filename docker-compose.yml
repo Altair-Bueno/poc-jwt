@@ -41,7 +41,7 @@ services:
     volumes:
       - ./public.key:/public.key
     environment:
-      AXUM_public_key: /public.key
+      AXUM_JWT_PUBLICKEY: /public.key
     ports:
       - '9100:9100'
   svelte-front:

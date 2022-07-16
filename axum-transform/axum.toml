@@ -2,5 +2,10 @@
 # hostname = '127.0.0.1'
 # Server port
 # port = 9100
+[jwt]
 # Location of the RSA public key used to verify JWT tokens
-public_key = '../public.key'
+publickey = '../public.key'
+# Algorithm used
+# algorithm='RS256'
+# Key kind
+# kind='RSAPem'

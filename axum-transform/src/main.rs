@@ -4,8 +4,8 @@ use std::net::SocketAddr;
 
 use axum::routing::post;
 use axum::{Extension, Router};
-
 use tower::ServiceBuilder;
+use tower_http::compression::CompressionLayer;
 use tower_http::cors::CorsLayer;
 use tower_http::trace::TraceLayer;
 use tracing::error;
@@ -16,7 +16,7 @@ use error::ConfigError;
 use util::load_config;
 
 use crate::auth::JWTAuthentication;
-use crate::util::{load_decoding_key, load_validation};
+use crate::util::{init_logger, load_decoding_key, load_validation};
 
 mod auth;
 mod config;
@@ -36,7 +36,7 @@ async fn main() {
 }
 
 async fn run() -> Result<(), ConfigError> {
-    tracing_subscriber::fmt().init();
+    init_logger();
 
     let config = load_config()?;
     info!(config = ?config, "Loaded config");
@@ -45,13 +45,15 @@ async fn run() -> Result<(), ConfigError> {
 
     let key = load_decoding_key(&config).await?;
     let validation = load_validation(&config).await?;
+    let middleware = ServiceBuilder::new()
+        .layer(TraceLayer::new_for_http())
+        .layer(CompressionLayer::new())
+        .layer(CorsLayer::permissive())
+        .layer(Extension(JWTAuthentication::new(key, validation)));
 
-    let app = Router::new().route("/", post(controller::transform)).layer(
-        ServiceBuilder::new()
-            .layer(TraceLayer::new_for_http())
-            .layer(CorsLayer::permissive())
-            .layer(Extension(JWTAuthentication::new(key, validation))),
-    );
+    let app = Router::new()
+        .route("/", post(controller::transform))
+        .layer(middleware);
 
     let socket_addr = SocketAddr::from((hostname, port));
     axum::Server::bind(&socket_addr)

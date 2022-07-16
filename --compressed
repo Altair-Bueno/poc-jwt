@@ -1,0 +1,40 @@
+== Info:   Trying 127.0.0.1:9100...
+== Info: Connected to localhost (127.0.0.1) port 9100 (#0)
+=> Send header, 78 bytes (0x4e)
+0000: 47 45 54 20 2f 20 48 54 54 50 2f 31 2e 31 0d 0a GET / HTTP/1.1..
+0010: 48 6f 73 74 3a 20 6c 6f 63 61 6c 68 6f 73 74 3a Host: localhost:
+0020: 39 31 30 30 0d 0a 55 73 65 72 2d 41 67 65 6e 74 9100..User-Agent
+0030: 3a 20 63 75 72 6c 2f 37 2e 37 39 2e 31 0d 0a 41 : curl/7.79.1..A
+0040: 63 63 65 70 74 3a 20 2a 2f 2a 0d 0a 0d 0a       ccept: */*....
+== Info: Mark bundle as not supporting multiuse
+<= Recv header, 33 bytes (0x21)
+0000: 48 54 54 50 2f 31 2e 31 20 34 30 35 20 4d 65 74 HTTP/1.1 405 Met
+0010: 68 6f 64 20 4e 6f 74 20 41 6c 6c 6f 77 65 64 0d hod Not Allowed.
+0020: 0a                                              .
+<= Recv header, 19 bytes (0x13)
+0000: 63 6f 6e 74 65 6e 74 2d 6c 65 6e 67 74 68 3a 20 content-length: 
+0010: 30 0d 0a                                        0..
+<= Recv header, 32 bytes (0x20)
+0000: 61 63 63 65 73 73 2d 63 6f 6e 74 72 6f 6c 2d 61 access-control-a
+0010: 6c 6c 6f 77 2d 6f 72 69 67 69 6e 3a 20 2a 0d 0a llow-origin: *..
+<= Recv header, 14 bytes (0xe)
+0000: 76 61 72 79 3a 20 6f 72 69 67 69 6e 0d 0a       vary: origin..
+<= Recv header, 37 bytes (0x25)
+0000: 76 61 72 79 3a 20 61 63 63 65 73 73 2d 63 6f 6e vary: access-con
+0010: 74 72 6f 6c 2d 72 65 71 75 65 73 74 2d 6d 65 74 trol-request-met
+0020: 68 6f 64 0d 0a                                  hod..
+<= Recv header, 38 bytes (0x26)
+0000: 76 61 72 79 3a 20 61 63 63 65 73 73 2d 63 6f 6e vary: access-con
+0010: 74 72 6f 6c 2d 72 65 71 75 65 73 74 2d 68 65 61 trol-request-hea
+0020: 64 65 72 73 0d 0a                               ders..
+<= Recv header, 34 bytes (0x22)
+0000: 61 63 63 65 73 73 2d 63 6f 6e 74 72 6f 6c 2d 65 access-control-e
+0010: 78 70 6f 73 65 2d 68 65 61 64 65 72 73 3a 20 2a xpose-headers: *
+0020: 0d 0a                                           ..
+<= Recv header, 37 bytes (0x25)
+0000: 64 61 74 65 3a 20 53 61 74 2c 20 31 36 20 4a 75 date: Sat, 16 Ju
+0010: 6c 20 32 30 32 32 20 31 34 3a 30 34 3a 35 31 20 l 2022 14:04:51 
+0020: 47 4d 54 0d 0a                                  GMT..
+<= Recv header, 2 bytes (0x2)
+0000: 0d 0a                                           ..
+== Info: Connection #0 to host localhost left intact
