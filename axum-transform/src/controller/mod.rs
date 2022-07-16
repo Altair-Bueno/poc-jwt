@@ -2,13 +2,13 @@ use axum::Json;
 use chrono::Utc;
 
 use crate::{
-    auth::JWTAuth,
+    auth::extractor::Authentication,
     error::RequestResult,
     model::{TransformRequest, TransformResponse, Transformation},
 };
 
 pub async fn transform(
-    _: JWTAuth,
+    _: Authentication,
     Json(request): Json<TransformRequest>,
 ) -> RequestResult<Json<TransformResponse>> {
     let took = Utc::now();

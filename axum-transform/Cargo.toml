@@ -10,6 +10,7 @@ axum = { version = "0.5.12", features = ["headers"] }
 chrono = { version = "0.4.19", features = ["serde"] }
 enum-utils = "0.1.2"
 figment = {version = "0.10.6", features=["env", "toml"] }
+getset = "0.1.2"
 hyper = "0.14.20"
 jsonwebtoken = "8.1.1"
 serde = { version = "1.0.139", features = ["derive"] }

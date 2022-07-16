@@ -31,6 +31,8 @@ pub enum AuthenticationError {
 pub enum RequestError {
     #[error(transparent)]
     Unauthorised(#[from] AuthenticationError),
+    #[error("{0}")]
+    InternalServerError(&'static str),
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -41,10 +43,11 @@ struct Payload {
 
 impl IntoResponse for RequestError {
     fn into_response(self) -> axum::response::Response {
-        let (code, message) = match self {
-            RequestError::Unauthorised(x) => (StatusCode::UNAUTHORIZED, format!("{x}")),
+        let code = match self {
+            RequestError::Unauthorised(_) => StatusCode::UNAUTHORIZED,
+            RequestError::InternalServerError(_) => StatusCode::INTERNAL_SERVER_ERROR,
         };
-
+        let message = self.to_string();
         let timestamp = Utc::now();
         let payload = Json(Payload { timestamp, message });
         (code, payload).into_response()
