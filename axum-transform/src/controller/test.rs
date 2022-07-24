@@ -44,7 +44,6 @@ pub async fn check_if_routes_are_available(
     
     let response = tower::ServiceExt::oneshot(router, request).await.unwrap();
     let status = response.status();
-    print!("{:?}", hyper::body::to_bytes(response.into_body()).await.unwrap());
 
     assert_that!(status)
         .is_equal_to(StatusCode::OK);

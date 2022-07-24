@@ -1,0 +1,24 @@
+openapi: 3.0.0
+info:
+  title: tsdeno
+  version: 0.0.1
+  description: |
+    Sample using Deno and TypeScript
+servers:
+  - url: http://localhost:9200
+    description: Development server
+paths:
+  /:
+    get:
+      summary: Fetch all information related to the user
+      responses:
+        '200':
+          description: OK
+security:
+  - bearer: []
+components:
+  securitySchemes:
+    bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

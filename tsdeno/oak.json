@@ -1,0 +1,5 @@
+{
+  "port": 9100,
+  "publicKey": "../public.key",
+  "algorithm": "RS256"
+}
