@@ -4,8 +4,9 @@ import { info } from "log/mod.ts";
 import router from "./routes/index.ts";
 import { oakCors } from "cors/mod.ts";
 import { jwtAuth } from "./auth/index.ts";
+import type {State} from './types.ts'
 
-const server = new Application();
+const server = new Application<State>();
 server.use(oakCors());
 server.use(jwtAuth);
 server.use(router.routes());

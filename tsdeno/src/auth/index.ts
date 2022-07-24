@@ -1,11 +1,20 @@
 import { Context } from "oak/mod.ts";
 import config from "../config.ts";
 import { verify } from "djwt/mod.ts";
+import { State } from "../types.ts";
 
 const AUTHORIZATION_HEADER = "Authorization";
 const BEARER_TOKEN_PREFIX = "Bearer";
 
 const key = await Deno.readTextFile(config.publicKey);
+
+export interface Authentication {
+  iss: string;
+  sub: string;
+  exp: number;
+  iat: number;
+  roles: Array<string>;
+}
 
 function extractToken(rawHeader: string | null | undefined) {
   if (!rawHeader) throw new Error("Missing authorization header");
@@ -16,11 +25,11 @@ function extractToken(rawHeader: string | null | undefined) {
   return token;
 }
 
-export async function jwtAuth(ctx: Context, next: any) {
+export async function jwtAuth(ctx: Context<State>, next: any) {
   const authorization = ctx.request.headers.get(AUTHORIZATION_HEADER);
   const token = extractToken(authorization);
 
   const payload = await verify(token, key, config.algorithm);
-  ctx.state.auth = payload;
+  ctx.state.auth = payload as unknown as Authentication;
   await next();
 }
