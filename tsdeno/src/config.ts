@@ -1,6 +1,6 @@
-import {parse} from "flags/mod.ts";
-import {AlgorithmInput} from "djwt/algorithm.ts";
-import {info, warning} from "log/mod.ts";
+import { parse } from "flags/mod.ts";
+import { AlgorithmInput } from "djwt/algorithm.ts";
+import { info, warning } from "log/mod.ts";
 
 const CONFIG_FILENAME_ENV = "OAK_CONFIG_FILE";
 const CONFIG_FILENAME = Deno.env.get(CONFIG_FILENAME_ENV) || "oak.json";

@@ -1,7 +1,7 @@
-import {Context, Middleware} from "oak/mod.ts";
-import {verify} from "djwt/mod.ts";
-import {Config} from "../config.ts";
-import {State} from "../types.ts";
+import { Context, Middleware } from "oak/mod.ts";
+import { verify } from "djwt/mod.ts";
+import { Config } from "../config.ts";
+import { State } from "../types.ts";
 
 const AUTHORIZATION_HEADER = "Authorization";
 const BEARER_TOKEN_PREFIX = "Bearer";

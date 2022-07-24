@@ -1,11 +1,11 @@
-import {Application} from "oak/mod.ts";
-import {loadConfig} from "./config.ts";
-import {info} from "log/mod.ts";
+import { Application } from "oak/mod.ts";
+import { loadConfig } from "./config.ts";
+import { info } from "log/mod.ts";
 import router from "./routes/index.ts";
-import {oakCors} from "cors/mod.ts";
-import {jwtAuth} from "./auth/index.ts";
-import type {State} from "./types.ts";
-import {errorMiddleware} from "./error.ts";
+import { oakCors } from "cors/mod.ts";
+import { jwtAuth } from "./auth/index.ts";
+import type { State } from "./types.ts";
+import { errorMiddleware } from "./error.ts";
 
 const server = new Application<State>();
 const config = await loadConfig();
