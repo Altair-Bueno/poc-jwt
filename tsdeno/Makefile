@@ -10,5 +10,7 @@ run:
 
 fmt: 
 	deno fmt
+cache:
+	deno cache $(MAIN)
 
 .PHONY: run fmt
