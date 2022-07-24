@@ -11,16 +11,13 @@ const server = new Application<State>();
 const config = await loadConfig();
 const publicKey = await Deno.readTextFile(config.publicKey);
 
-const baseState: State = {
-  config,
-  publicKey,
-};
 // Enable CORS
 server.use(errorMiddleware)
 server.use(oakCors());
 // Dependency injection
 server.use(async (ctx, next) => {
-  ctx.state = baseState;
+  ctx.state.config = config;
+  ctx.state.publicKey =publicKey
   await next();
 });
 // Require JWT on all routes
