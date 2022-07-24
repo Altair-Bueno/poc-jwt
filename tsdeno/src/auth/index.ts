@@ -1,6 +1,6 @@
-import { Context } from "oak/mod.ts";
-import { verify } from "djwt/mod.ts";
-import { State } from "../types.ts";
+import {Context} from "oak/mod.ts";
+import {verify} from "djwt/mod.ts";
+import {State} from "../types.ts";
 
 const AUTHORIZATION_HEADER = "Authorization";
 const BEARER_TOKEN_PREFIX = "Bearer";
@@ -24,7 +24,10 @@ function extractToken(rawHeader: string | null | undefined) {
   return token;
 }
 
-export async function jwtAuth(ctx: Context<State>, next: any) {
+export async function jwtAuth(
+  ctx: Context<State>,
+  next: () => Promise<unknown>,
+) {
   if (!ctx.state.publicKey) throw new Error("Missing public key");
 
   const authorization = ctx.request.headers.get(AUTHORIZATION_HEADER);
