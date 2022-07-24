@@ -1,6 +1,6 @@
-import { parse } from "flags/mod.ts";
-import { AlgorithmInput } from "djwt/algorithm.ts";
-import { info, warning } from "log/mod.ts";
+import {parse} from "flags/mod.ts";
+import {AlgorithmInput} from "djwt/algorithm.ts";
+import {info, warning} from "log/mod.ts";
 
 const CONFIG_FILENAME_ENV = "OAK_CONFIG_FILE";
 const CONFIG_FILENAME = Deno.env.get(CONFIG_FILENAME_ENV) || "oak.json";
@@ -23,9 +23,7 @@ export async function loadConfig(): Promise<Config> {
 
   let file = {};
   try {
-    info(
-      `Loading config file: ${CONFIG_FILENAME}. Note: set the location of the config file using \`${CONFIG_FILENAME_ENV}\``,
-    );
+    info(`Loading config file: ${CONFIG_FILENAME}.`);
     const content = await Deno.readTextFile(CONFIG_FILENAME);
     file = JSON.parse(content);
   } catch {
@@ -38,7 +36,7 @@ export async function loadConfig(): Promise<Config> {
     ...args,
   } as unknown as Config;
 
-  info("Configuration loaded succesfully");
+  info("Configuration loaded successfully");
   info(config);
   return config;
 }
