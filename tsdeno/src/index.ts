@@ -5,19 +5,19 @@ import router from "./routes/index.ts";
 import { oakCors } from "cors/mod.ts";
 import { jwtAuth } from "./auth/index.ts";
 import type { State } from "./types.ts";
-import {errorMiddleware} from "./error.ts"
+import { errorMiddleware } from "./error.ts";
 
 const server = new Application<State>();
 const config = await loadConfig();
 const publicKey = await Deno.readTextFile(config.publicKey);
 
 // Enable CORS
-server.use(errorMiddleware)
+server.use(errorMiddleware);
 server.use(oakCors());
 // Dependency injection
 server.use(async (ctx, next) => {
   ctx.state.config = config;
-  ctx.state.publicKey =publicKey
+  ctx.state.publicKey = publicKey;
   await next();
 });
 // Require JWT on all routes

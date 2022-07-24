@@ -24,7 +24,7 @@ export async function loadConfig(): Promise<Config> {
   let file = {};
   try {
     info(
-      `Loading config file: ${CONFIG_FILENAME}. Note: set the location of the config file using \`${CONFIG_FILENAME_ENV}\``
+      `Loading config file: ${CONFIG_FILENAME}. Note: set the location of the config file using \`${CONFIG_FILENAME_ENV}\``,
     );
     const content = await Deno.readTextFile(CONFIG_FILENAME);
     file = JSON.parse(content);
