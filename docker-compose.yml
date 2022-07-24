@@ -44,6 +44,16 @@ services:
       AXUM_JWT_PUBLICKEY: /public.key
     ports:
       - '9100:9100'
+  tsdeno:
+    build: tsdeno
+    container_name: tsdeno
+    volumes: 
+      - ./config/tsdeno.json:/tsdeno.json
+      - ./public.key:/public.key
+    environment:
+      OAK_CONFIG_FILE: /tsdeno.json
+    ports:
+      - '9200:9200'
   svelte-front:
     container_name: svelte-front
     build: 

@@ -1,0 +1,6 @@
+{
+  "port": 9200,
+  "publicKey": "/public.key",
+  "algorithm": "RS256",
+  "hostname": "0.0.0.0"
+}
