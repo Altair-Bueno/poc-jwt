@@ -1,7 +1,8 @@
-import { Authentication } from "./auth/index.ts";
-import { Config } from "./config.ts";
+import {Authentication} from "./auth/index.ts";
+import {Config} from "./config.ts";
+
 export interface State {
-  config: Config;
+  config?: Config;
   publicKey?: string;
   auth?: Authentication;
 }

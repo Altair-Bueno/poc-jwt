@@ -1,5 +1,6 @@
-import {Context} from "oak/mod.ts";
+import {Context, Middleware} from "oak/mod.ts";
 import {verify} from "djwt/mod.ts";
+import {Config} from "../config.ts";
 import {State} from "../types.ts";
 
 const AUTHORIZATION_HEADER = "Authorization";
@@ -24,20 +25,20 @@ function extractToken(rawHeader: string | null | undefined) {
   return token;
 }
 
-export async function jwtAuth(
-  ctx: Context<State>,
-  next: () => Promise<unknown>,
-) {
-  if (!ctx.state.publicKey) throw new Error("Missing public key");
+export function jwtAuth(
+  publicKey: string,
+  config: Config,
+): Middleware<State, Context<State, State>> {
+  return async (ctx, next) => {
+    const authorization = ctx.request.headers.get(AUTHORIZATION_HEADER);
+    const token = extractToken(authorization);
 
-  const authorization = ctx.request.headers.get(AUTHORIZATION_HEADER);
-  const token = extractToken(authorization);
-  const payload = await verify(
-    token,
-    ctx.state.publicKey,
-    ctx.state.config.algorithm,
-  );
-
-  ctx.state.auth = payload as unknown as Authentication;
-  await next();
+    const payload = await verify(
+      token,
+      publicKey,
+      config.algorithm,
+    );
+    ctx.state.auth = payload as unknown as Authentication;
+    await next();
+  };
 }

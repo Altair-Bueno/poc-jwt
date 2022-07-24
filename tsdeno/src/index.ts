@@ -1,11 +1,11 @@
-import { Application } from "oak/mod.ts";
-import { loadConfig } from "./config.ts";
-import { info } from "log/mod.ts";
+import {Application} from "oak/mod.ts";
+import {loadConfig} from "./config.ts";
+import {info} from "log/mod.ts";
 import router from "./routes/index.ts";
-import { oakCors } from "cors/mod.ts";
-import { jwtAuth } from "./auth/index.ts";
-import type { State } from "./types.ts";
-import { errorMiddleware } from "./error.ts";
+import {oakCors} from "cors/mod.ts";
+import {jwtAuth} from "./auth/index.ts";
+import type {State} from "./types.ts";
+import {errorMiddleware} from "./error.ts";
 
 const server = new Application<State>();
 const config = await loadConfig();
@@ -21,7 +21,7 @@ server.use(async (ctx, next) => {
   await next();
 });
 // Require JWT on all routes
-server.use(jwtAuth);
+server.use(jwtAuth(publicKey, config));
 server.use(router.routes());
 server.listen(config);
 
