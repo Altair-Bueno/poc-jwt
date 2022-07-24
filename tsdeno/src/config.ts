@@ -12,32 +12,33 @@ export interface Config {
   hostname: string;
 }
 
-const defaultConfig = {
+export const defaultConfig = {
   port: 9200,
   algorithm: "RS256",
   hostname: "0.0.0.0",
 };
 
-const args = parse(Deno.args);
+export async function loadConfig(): Promise<Config> {
+  const args = parse(Deno.args);
 
-let file = {};
-try {
-  info(
-    `Loading config file: ${CONFIG_FILENAME}. Note: set the location of the config file using \`${CONFIG_FILENAME_ENV}\``,
-  );
-  const content = await Deno.readTextFile(CONFIG_FILENAME);
-  file = JSON.parse(content);
-} catch {
-  warning(`No configuration file provided. Expected ${CONFIG_FILENAME}`);
+  let file = {};
+  try {
+    info(
+      `Loading config file: ${CONFIG_FILENAME}. Note: set the location of the config file using \`${CONFIG_FILENAME_ENV}\``
+    );
+    const content = await Deno.readTextFile(CONFIG_FILENAME);
+    file = JSON.parse(content);
+  } catch {
+    warning(`No configuration file provided. Expected ${CONFIG_FILENAME}`);
+  }
+
+  const config = {
+    ...defaultConfig,
+    ...file,
+    ...args,
+  } as unknown as Config;
+
+  info("Configuration loaded succesfully");
+  info(config);
+  return config;
 }
-
-const config = {
-  ...defaultConfig,
-  ...file,
-  ...args,
-} as unknown as Config;
-
-info("Configuration loaded succesfully");
-info(config);
-
-export default config;

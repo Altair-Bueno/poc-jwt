@@ -1,12 +1,11 @@
 import { Context } from "oak/mod.ts";
-import config from "../config.ts";
 import { verify } from "djwt/mod.ts";
 import { State } from "../types.ts";
 
 const AUTHORIZATION_HEADER = "Authorization";
 const BEARER_TOKEN_PREFIX = "Bearer";
 
-const key = await Deno.readTextFile(config.publicKey);
+//const key = await Deno.readTextFile(config.publicKey);
 
 export interface Authentication {
   iss: string;
@@ -26,10 +25,12 @@ function extractToken(rawHeader: string | null | undefined) {
 }
 
 export async function jwtAuth(ctx: Context<State>, next: any) {
+  if (!ctx.state.publicKey) throw new Error('Missing public key')
+  
   const authorization = ctx.request.headers.get(AUTHORIZATION_HEADER);
   const token = extractToken(authorization);
-
-  const payload = await verify(token, key, config.algorithm);
+  const payload = await verify(token, ctx.state.publicKey, ctx.state.config.algorithm);
+  
   ctx.state.auth = payload as unknown as Authentication;
   await next();
 }
