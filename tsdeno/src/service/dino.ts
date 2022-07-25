@@ -6,3 +6,9 @@ export async function getDinos(page = 0): Promise<Dino[]> {
     .get();
   return dinos as unknown as Dino[];
 }
+
+export async function newDino({ name }: { name: string }): Promise<void> {
+  const dino = new Dino();
+  dino.name = name;
+  await dino.save();
+}
