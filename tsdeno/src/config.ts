@@ -1,6 +1,7 @@
 import { parse } from "flags/mod.ts";
 import { AlgorithmInput } from "djwt/algorithm.ts";
 import { info, warning } from "log/mod.ts";
+import type { SQLite3Options } from "denodb/mod.ts";
 
 const CONFIG_FILENAME_ENV = "OAK_CONFIG_FILE";
 const CONFIG_FILENAME = Deno.env.get(CONFIG_FILENAME_ENV) || "oak.json";
@@ -10,6 +11,7 @@ export interface Config {
   publicKey: string;
   algorithm: AlgorithmInput;
   hostname: string;
+  database: SQLite3Options;
 }
 
 export const defaultConfig = {

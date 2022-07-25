@@ -6,20 +6,20 @@ import { oakCors } from "cors/mod.ts";
 import { jwtAuth } from "./auth/index.ts";
 import type { State } from "./types.ts";
 import { errorMiddleware } from "./error.ts";
+import { Database, SQLite3Connector } from "denodb/mod.ts";
+import { linkModel } from "./database/index.ts";
 
-const server = new Application<State>();
 const config = await loadConfig();
 const publicKey = await Deno.readTextFile(config.publicKey);
 
-// Enable CORS
+const connector = new SQLite3Connector(config.database);
+const database = new Database(connector);
+linkModel(database);
+
+const server = new Application<State>({ state: { config } });
 server.use(errorMiddleware);
+// Enable CORS
 server.use(oakCors());
-// Dependency injection
-server.use(async (ctx, next) => {
-  ctx.state.config = config;
-  ctx.state.publicKey = publicKey;
-  await next();
-});
 // Require JWT on all routes
 server.use(jwtAuth(publicKey, config));
 server.use(router.routes());
