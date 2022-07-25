@@ -18,8 +18,8 @@ services:
     depends_on:
       - postgres
     environment:
-      JWT_PRIVATE_KEY: /private.key
-      JWT_PUBLIC_KEY: /public.key
+      JWT_PRIVATE_KEY: 'file:/private.key'
+      JWT_PUBLIC_KEY: 'file:/public.key'
       JWT_CLAIMS_ISSUER: authserv
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/auth
       SPRING_DATASOURCE_USERNAME: postgres
