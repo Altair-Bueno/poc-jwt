@@ -1,5 +1,8 @@
 {
   "port": 9200,
   "publicKey": "../public.key",
-  "algorithm": "RS256"
+  "algorithm": "RS256",
+  "database": {
+    "filepath": "database.sqlite" 
+  }
 }

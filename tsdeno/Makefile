@@ -3,7 +3,8 @@ MAIN        = $(SOURCE_DIR)/index.ts
 ARGS        = 
 PERMISSIONS = --allow-net \
               --allow-read \
-			  --allow-env
+			  --allow-env \
+			  --allow-write
 
 run: 
 	deno run $(PERMISSIONS) $(MAIN) $(ARGS)
