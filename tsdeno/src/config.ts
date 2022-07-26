@@ -1,12 +1,12 @@
-import { parse } from "flags/mod.ts";
 import { AlgorithmInput } from "djwt/algorithm.ts";
-import { info, warning } from "log/mod.ts";
+import { info } from "log/mod.ts";
 import type { SQLite3Options } from "denodb/mod.ts";
+import { auto } from "chimera/mod.ts";
 
-const CONFIG_FILENAME_ENV = "OAK_CONFIG_FILE";
-const CONFIG_FILENAME = Deno.env.get(CONFIG_FILENAME_ENV) || "oak.json";
+const CONFIG_DIR_ENV = "OAK_META_DIR";
 
 export interface Config {
+  meta: { dir: string };
   port: number;
   publicKey: string;
   algorithm: AlgorithmInput;
@@ -14,29 +14,24 @@ export interface Config {
   database: SQLite3Options;
 }
 
-export const defaultConfig = {
-  port: 9200,
-  algorithm: "RS256",
-  hostname: "0.0.0.0",
-};
-
 export async function loadConfig(): Promise<Config> {
-  const args = parse(Deno.args);
+  const configDir = Deno.env.get(CONFIG_DIR_ENV) || Deno.cwd();
+  info(`Loading configuration from ${configDir}`);
 
-  let file = {};
-  try {
-    info(`Loading config file: ${CONFIG_FILENAME}.`);
-    const content = await Deno.readTextFile(CONFIG_FILENAME);
-    file = JSON.parse(content);
-  } catch {
-    warning(`No configuration file provided. Expected ${CONFIG_FILENAME}`);
-  }
-
-  const config = {
-    ...defaultConfig,
-    ...file,
-    ...args,
-  } as unknown as Config;
+  const config = await auto<Config>({
+    name: "oak",
+    baseConfig: {
+      meta: { dir: configDir },
+      port: 9200,
+      algorithm: "RS256",
+      hostname: "0.0.0.0",
+      publicKey: "",
+      database: {
+        filepath: "",
+      },
+    },
+    configDir,
+  });
 
   info("Configuration loaded successfully");
   info(config);

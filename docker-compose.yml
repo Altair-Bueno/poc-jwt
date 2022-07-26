@@ -48,10 +48,8 @@ services:
     build: tsdeno
     container_name: tsdeno
     volumes: 
-      - ./config/tsdeno.json:/tsdeno.json
+      - ./config/tsdeno.json:/oak/oak.json
       - ./public.key:/public.key
-    environment:
-      OAK_CONFIG_FILE: /tsdeno.json
     ports:
       - '9200:9200'
   svelte-front:
