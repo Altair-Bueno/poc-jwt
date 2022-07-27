@@ -8,12 +8,42 @@ servers:
   - url: http://localhost:9200
     description: Development server
 paths:
-  /:
+  /dinos:
     get:
-      summary: Fetch all information related to the user
+      summary: Fetch all dinos
       responses:
-        '200':
+        "200":
           description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      nullable: false
+                      type: integer
+                    name:
+                      nullable: false
+                      type: string
+
+    post:
+      summary: Create a new dino
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  nullable: false
+                  type: string
+      responses:
+        "200":
+          description: OK
+
 security:
   - bearer: []
 components:
