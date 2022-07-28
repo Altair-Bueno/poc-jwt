@@ -8,6 +8,14 @@ Provides a simple SPA application that showcases all microservices
 
 - Node.js 16+
 
+### Creating a development environment
+
+Run the following command to create mock servers for each required service
+
+```sh
+docker compose up -d
+```
+
 ### Building and running the application
 
 ```shell

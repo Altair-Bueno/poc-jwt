@@ -1,0 +1,38 @@
+version: "3.7"
+services:
+
+  authserv-mock:
+    image: danielgtaylor/apisprout
+    container_name: authserv-mock
+    volumes:
+      - ../authserv/openapi.yaml:/openapi.yaml
+    ports:
+      - "8000:8000"
+    command: /openapi.yaml
+
+  spring-ping-mock:
+    image: danielgtaylor/apisprout
+    container_name: spring-ping-mock
+    volumes:
+      - ../spring-ping/openapi.yml:/openapi.yaml
+    ports:
+      - "9000:8000"
+    command: /openapi.yaml
+
+  axum-transform-mock:
+    image: danielgtaylor/apisprout
+    container_name: axum-transform-mock
+    volumes:
+      - ../axum-transform/openapi.yml:/openapi.yaml
+    ports:
+      - "9100:8000"
+    command: /openapi.yaml
+
+  tsdeno-mock:
+    image: danielgtaylor/apisprout
+    container_name: tsdeno-mock
+    volumes:
+      - ../tsdeno/openapi.yml:/openapi.yaml
+    ports:
+      - "9200:8000"
+    command: /openapi.yaml
