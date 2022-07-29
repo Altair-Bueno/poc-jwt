@@ -11,8 +11,8 @@ authenticate a user across multiple services.
   to authenticated users
 - [spring-ping](spring-ping)(Spring-Boot): Simple ping server that only responds
   to authenticated users
-- [svelte-front](svelte-front/)(Svelte + TS): SPA that consumes all described
-  services
+- [tsdeno](tsdeno/)(Deno + Oak): Sample Oak application that manages Dinos!
+- [svelte-front](svelte-front/)(Svelte + TS): SPA that consumes most services
 
 ## Configuration details
 
