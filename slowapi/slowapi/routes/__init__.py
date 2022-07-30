@@ -1,6 +1,7 @@
 from typing import List
 from uuid import UUID
 from fastapi import APIRouter, Depends
+from slowapi.auth import Authentication
 
 from slowapi.models import CreateTodo, Todo, UpdateTodo
 from ..services import TodoService
@@ -26,7 +27,9 @@ async def remove_todo(uuid: UUID, todoservice: TodoService = Depends(TodoService
 
 
 @router.get("/")
-async def get_todos(todoservice: TodoService = Depends(TodoService)) -> List[Todo]:
+async def get_todos(
+    _=Depends(Authentication), todoservice: TodoService = Depends(TodoService)
+) -> List[Todo]:
     return await todoservice.get_todos()
 
 
