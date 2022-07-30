@@ -1,0 +1,128 @@
+openapi: '3.0.2'
+info:
+  title: Slow api
+  version: '0.0.1'
+servers:
+  - url: http://localhost:9300
+    description: Development server
+security:
+  - bearer: []
+
+paths:
+  /:
+    get:
+      summary: Get Todos
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                nullable: false
+                items:
+                  $ref: "#/components/schemas/Todo"
+        '401':
+          $ref: "#/components/responses/Unauthrorised"
+    post: 
+      summary: Create todo
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title: 
+                  type: string
+                content:
+                  type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Todo"
+        '401':
+          $ref: "#/components/responses/Unauthrorised"
+  /{id}:
+    get:
+      parameters:
+        - in: path
+          required: true
+          name: id
+          schema:
+            nullable: false
+            type: string
+      summary: Get Todo
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                  $ref: "#/components/schemas/Todo"
+        '401':
+          $ref: "#/components/responses/Unauthrorised"
+    post:
+      parameters:
+        - in: path
+          required: true
+          name: id
+          schema:
+            type: string
+      summary: Update todo
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title: 
+                  type: string
+                  nullable: true
+                content:
+                  type: string
+                  nullable: true
+      responses:
+        '200':
+          description: OK
+        '401':
+          $ref: "#/components/responses/Unauthrorised"
+    delete:
+      parameters:
+        - in: path
+          required: true
+          name: id
+          schema:
+            type: string
+      summary: Delete todo
+      responses:
+        '200':
+          description: OK
+        '401':
+          $ref: "#/components/responses/Unauthrorised"
+
+components:
+  responses:
+    Unauthrorised:
+      description: Unauthorised
+  schemas:
+    Todo:
+      type: object
+      properties:
+        id: 
+          nullable: false
+          type: string
+        title: 
+          nullable: false
+          type: string
+        content: 
+          nullable: false
+          type: string
+      
+  securitySchemes:
+    bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
