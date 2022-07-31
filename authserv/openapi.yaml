@@ -4,6 +4,8 @@ info:
   version: 0.0.1-SNAPSHOT
   description: |
     SSO service based on JWT
+  license:
+    name: MIT
 servers:
   - url: http://localhost:8000
     description: Development server
@@ -16,15 +18,15 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/basic"
+              $ref: "#/components/schemas/BasicAuth"
             example:
               username: admin
               password: password
       responses:
         "200":
-          $ref: "#/components/responses/session"
+          $ref: "#/components/responses/Session"
         "401":
-          $ref: "#/components/responses/unauthorised"
+          $ref: "#/components/responses/Unauthorised"
 
   /auth/register:
     post:
@@ -34,7 +36,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/register"
+              $ref: "#/components/schemas/Register"
             example:
               username: pepe
               password: password
@@ -42,7 +44,7 @@ paths:
         "200":
           description: OK
         "401":
-          $ref: "#/components/responses/unauthorised"
+          $ref: "#/components/responses/Unauthorised"
 
   /auth/refresh:
     post:
@@ -52,15 +54,15 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/refresh"
+              $ref: "#/components/schemas/Refresh"
             example:
               username: pepe
               refresh_token: c5f53dcd-bb67-4b15-9a02-fe04c9b7f8da
       responses:
         "200":
-          $ref: "#/components/responses/session"
+          $ref: "#/components/responses/Session"
         "401":
-          $ref: "#/components/responses/unauthorised"
+          $ref: "#/components/responses/Unauthorised"
 
   /auth/check:
     get:
@@ -73,9 +75,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/check"
+                $ref: "#/components/schemas/Check"
+              example:
+                name: pepe
+                authorities: [admin]
         "401":
-          $ref: "#/components/responses/unauthorised"
+          $ref: "#/components/responses/Unauthorised"
 
 components:
   securitySchemes:
@@ -84,11 +89,18 @@ components:
       scheme: bearer
       bearerFormat: JWT
   responses:
-    unauthorised:
+    Unauthorised:
       description: "Unauthorised: Access token is missing or invalid"
       content:
         application/json:
           schema:
+            required:
+              - timestamp
+              - status
+              - error
+              - trace
+              - message
+              - path
             type: object
             properties:
               timestamp:
@@ -103,36 +115,55 @@ components:
                 type: string
               path:
                 type: string
-    session:
+    Session:
       description: OK
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/session"
+            $ref: "#/components/schemas/Session"
+          example:
+            "access_token": "eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJmb28iLCJzdWIiOiIyMjNiZmI2Ny0yZTIyLTRjZTMtYTAxMC1iZmVhZmRmZjE3MzkiLCJleHAiOjE2NTkyNzI0MDYsImlhdCI6MTY1OTI3MjM0Niwicm9sZXMiOlsiQURNSU4iXX0.QBFaSj8iOPc6OyZbL_waRA3WqOs9uydZbsset5qV9c_qZGggyjSr0u3QmIs0y0J9oJTAKnCZHwlf305xAWewvjd6xs8x1oPBj81cVfgyA-x_GtzNGUMv_2Q5r7_xFpH3_5eIDH_ID6V-WmG4g_BHUJgk6MTfC5u-7WI1rEaJ5n8jRv-oQA6tzW9wmUCq_95GHuKIrmtLdpiGr4L3xbyXUJTwGeAbSZsbe3FWeaD2Yvf0s7yrWLoLIiSiRBspfYstDLkA1I73HHh6urrv-oULUqmObv_lPjD386E_CQyKG8PEuOjHwd4_alEDq0ORJ2tpuQswd0rRoFJcYhgSCAbjTg"
+            "token_type": "Bearer"
+            "refresh_token": "0e536b45-c31b-41a6-b41e-4fe05597dd3e"
+            "expires_in": 60
   schemas:
-    basic:
+    BasicAuth:
       type: object
+      required:
+        - username
+        - password
       properties:
         username:
           type: string
         password:
           type: string
-    register:
+    Register:
       type: object
+      required:
+        - username
+        - password
       properties:
         username:
           type: string
         password:
           type: string
-    refresh:
+    Refresh:
       type: object
+      required:
+        - refresh_token
+        - username
       properties:
         refresh_token:
           type: string
         username:
           type: string
-    session:
+    Session:
       type: object
+      required:
+        - access_token
+        - refresh_token
+        - expires_in
+        - token_type
       properties:
         access_token:
           type: string
@@ -143,8 +174,11 @@ components:
         token_type:
           type: string
           enum: [ "Bearer" ]
-    check:
+    Check:
       type: object
+      required:
+        - name
+        - authorities
       properties:
         name:
           type: string
