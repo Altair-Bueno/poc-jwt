@@ -68,6 +68,7 @@ paths:
           required: true
           name: id
           schema:
+            format: uuid
             type: string
           example: ccb5fe7d-a1f1-4a7f-822a-972b47e6be97
       summary: Get Todo
@@ -90,6 +91,7 @@ paths:
           required: true
           name: id
           schema:
+            format: uuid
             type: string
           example: ccb5fe7d-a1f1-4a7f-822a-972b47e6be97
       summary: Update todo
@@ -118,6 +120,7 @@ paths:
           required: true
           name: id
           schema:
+            format: uuid
             type: string
           example: ccb5fe7d-a1f1-4a7f-822a-972b47e6be97
       summary: Delete todo
@@ -142,6 +145,7 @@ components:
         id: 
           nullable: false
           type: string
+          format: uuid
         title: 
           nullable: false
           type: string
