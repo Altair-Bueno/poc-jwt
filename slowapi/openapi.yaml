@@ -2,7 +2,9 @@ openapi: '3.0.2'
 info:
   title: Slow api
   version: '0.0.1'
-  description: Todo crud
+  description: Fast API JWT micro service for managing todos
+  license:
+    name: MIT
 servers:
   - url: http://localhost:9300
     description: Development server
@@ -12,7 +14,7 @@ security:
 paths:
   /:
     get:
-      summary: Get Todos
+      summary: Get all Todos
       responses:
         '200':
           description: OK
@@ -20,9 +22,12 @@ paths:
             application/json:
               schema:
                 type: array
-                nullable: false
                 items:
                   $ref: "#/components/schemas/Todo"
+              example:
+                - id: ccb5fe7d-a1f1-4a7f-822a-972b47e6be97
+                  title: Hello world
+                  content: Lorem ipsum
         '401':
           $ref: "#/components/responses/Unauthrorised"
     post: 
@@ -31,12 +36,18 @@ paths:
         content:
           application/json:
             schema:
+              required:
+                - title
+                - content
               type: object
               properties:
                 title: 
                   type: string
                 content:
                   type: string
+            example:
+              title: Hello world
+              content: Lorem ipsum
       responses:
         '200':
           description: OK
@@ -44,6 +55,10 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Todo"
+              example:
+                id: ccb5fe7d-a1f1-4a7f-822a-972b47e6be97
+                title: Hello world
+                content: Lorem ipsum
         '401':
           $ref: "#/components/responses/Unauthrorised"
   /{id}:
@@ -53,8 +68,8 @@ paths:
           required: true
           name: id
           schema:
-            nullable: false
             type: string
+          example: ccb5fe7d-a1f1-4a7f-822a-972b47e6be97
       summary: Get Todo
       responses:
         '200':
@@ -63,6 +78,10 @@ paths:
             application/json:
               schema:
                   $ref: "#/components/schemas/Todo"
+              example:
+                id: ccb5fe7d-a1f1-4a7f-822a-972b47e6be97
+                title: Hello world
+                content: Lorem ipsum                  
         '401':
           $ref: "#/components/responses/Unauthrorised"
     post:
@@ -72,6 +91,7 @@ paths:
           name: id
           schema:
             type: string
+          example: ccb5fe7d-a1f1-4a7f-822a-972b47e6be97
       summary: Update todo
       requestBody:
         content:
@@ -85,6 +105,8 @@ paths:
                 content:
                   type: string
                   nullable: true
+            example:
+              title: Change the title
       responses:
         '200':
           description: OK
@@ -97,6 +119,7 @@ paths:
           name: id
           schema:
             type: string
+          example: ccb5fe7d-a1f1-4a7f-822a-972b47e6be97
       summary: Delete todo
       responses:
         '200':
@@ -111,6 +134,10 @@ components:
   schemas:
     Todo:
       type: object
+      required:
+        - id
+        - title
+        - content
       properties:
         id: 
           nullable: false

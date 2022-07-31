@@ -37,4 +37,4 @@ async def get_todos(
 async def create_todo(
     payload: CreateTodo, todoservice: TodoService = Depends(TodoService)
 ):
-    await todoservice.create_todo(payload)
+    return await todoservice.create_todo(payload)
