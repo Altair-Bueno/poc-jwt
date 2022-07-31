@@ -2,6 +2,8 @@ from tortoise.models import Model
 from tortoise.contrib.pydantic.creator import pydantic_model_creator
 from tortoise.fields import *
 
+MODULES = {"models": ["slowapi.models"]}
+
 
 class TodoEntity(Model):
     id = UUIDField(pk=True)

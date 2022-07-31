@@ -19,19 +19,17 @@ class Claims(BaseModel):
     roles: List[str]
 
 
-class Authentication:
-    def __init__(
-        self,
-        authorization: str = Header(),
-        settings: Settings = Depends(settings),
-        public_key: str = Depends(public_key),
-    ) -> None:
-        bearer = "Bearer "
-        if not authorization.startswith(bearer):
-            raise AuthenticationError("Invalid format")
-        token = authorization.removeprefix(bearer)
-        try:
-            payload = decode(token, public_key, algorithms=[settings.jwt.algorithm])
-            self.claims = Claims(**payload)
-        except Exception as e:
-            raise AuthenticationError(e)
+def Authentication(
+    authorization: str = Header(),
+    settings: Settings = Depends(settings),
+    public_key: str = Depends(public_key),
+) -> Claims:
+    bearer = "Bearer "
+    if not authorization.startswith(bearer):
+        raise AuthenticationError("Invalid format")
+    token = authorization.removeprefix(bearer)
+    try:
+        payload = decode(token, public_key, algorithms=[settings.jwt.algorithm])
+        return Claims(**payload)
+    except Exception as e:
+        raise AuthenticationError(e)
