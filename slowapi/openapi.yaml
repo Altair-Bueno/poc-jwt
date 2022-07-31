@@ -2,6 +2,7 @@ openapi: '3.0.2'
 info:
   title: Slow api
   version: '0.0.1'
+  description: Todo crud
 servers:
   - url: http://localhost:9300
     description: Development server

@@ -9,7 +9,7 @@ class DatabaseSettings(BaseModel):
 
 
 class JwtSettings(BaseModel):
-    algorithm: str = "RSA256"
+    algorithm: str = "RS256"
     publickey: str
 
     class Config:
