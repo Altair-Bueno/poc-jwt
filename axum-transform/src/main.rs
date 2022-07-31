@@ -12,8 +12,6 @@ use util::load_config;
 use crate::router::app;
 use crate::util::init_logger;
 
-#[cfg(test)]
-mod test;
 mod auth;
 mod config;
 mod controller;
@@ -21,6 +19,8 @@ mod error;
 mod model;
 mod role;
 mod router;
+#[cfg(test)]
+mod test;
 mod util;
 
 #[tokio::main]

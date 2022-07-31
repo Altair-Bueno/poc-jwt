@@ -19,9 +19,8 @@ pub async fn app(config: &Config) -> Result<Router, ConfigError> {
         .layer(CompressionLayer::new())
         .layer(TraceLayer::new_for_http())
         .layer(CorsLayer::permissive());
-        
+
     let controller = controller::router();
-    let app = Router::new().nest("/", controller)
-        .layer(middleware);
+    let app = Router::new().nest("/", controller).layer(middleware);
     Ok(app)
 }
