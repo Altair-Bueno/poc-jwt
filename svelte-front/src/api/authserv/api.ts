@@ -14,30 +14,30 @@
 
 import { Configuration } from "./configuration";
 import globalAxios, {
-  AxiosInstance,
   AxiosPromise,
+  AxiosInstance,
   AxiosRequestConfig,
 } from "axios";
 // Some imports not used depending on template conditions
 // @ts-ignore
 import {
-  assertParamExists,
-  createRequestFunction,
   DUMMY_BASE_URL,
-  serializeDataIfNeeded,
+  assertParamExists,
   setApiKeyToObject,
   setBasicAuthToObject,
   setBearerAuthToObject,
   setOAuthToObject,
   setSearchParams,
+  serializeDataIfNeeded,
   toPathString,
+  createRequestFunction,
 } from "./common";
 // @ts-ignore
 import {
   BASE_PATH,
-  BaseAPI,
   COLLECTION_FORMATS,
   RequestArgs,
+  BaseAPI,
   RequiredError,
 } from "./base";
 
@@ -52,56 +52,56 @@ export interface AuthLoginPost401Response {
    * @type {string}
    * @memberof AuthLoginPost401Response
    */
-  timestamp?: string;
+  timestamp: string;
   /**
    *
    * @type {number}
    * @memberof AuthLoginPost401Response
    */
-  status?: number;
+  status: number;
   /**
    *
    * @type {string}
    * @memberof AuthLoginPost401Response
    */
-  error?: string;
+  error: string;
   /**
    *
    * @type {string}
    * @memberof AuthLoginPost401Response
    */
-  trace?: string;
+  trace: string;
   /**
    *
    * @type {string}
    * @memberof AuthLoginPost401Response
    */
-  message?: string;
+  message: string;
   /**
    *
    * @type {string}
    * @memberof AuthLoginPost401Response
    */
-  path?: string;
+  path: string;
 }
 /**
  *
  * @export
- * @interface Basic
+ * @interface BasicAuth
  */
-export interface Basic {
+export interface BasicAuth {
   /**
    *
    * @type {string}
-   * @memberof Basic
+   * @memberof BasicAuth
    */
-  username?: string;
+  username: string;
   /**
    *
    * @type {string}
-   * @memberof Basic
+   * @memberof BasicAuth
    */
-  password?: string;
+  password: string;
 }
 /**
  *
@@ -114,13 +114,13 @@ export interface Check {
    * @type {string}
    * @memberof Check
    */
-  name?: string;
+  name: string;
   /**
    *
    * @type {Array<string>}
    * @memberof Check
    */
-  authorities?: Array<string>;
+  authorities: Array<string>;
 }
 /**
  *
@@ -133,13 +133,13 @@ export interface Refresh {
    * @type {string}
    * @memberof Refresh
    */
-  refresh_token?: string;
+  refresh_token: string;
   /**
    *
    * @type {string}
    * @memberof Refresh
    */
-  username?: string;
+  username: string;
 }
 /**
  *
@@ -152,13 +152,13 @@ export interface Register {
    * @type {string}
    * @memberof Register
    */
-  username?: string;
+  username: string;
   /**
    *
    * @type {string}
    * @memberof Register
    */
-  password?: string;
+  password: string;
 }
 /**
  *
@@ -171,25 +171,25 @@ export interface Session {
    * @type {string}
    * @memberof Session
    */
-  access_token?: string;
+  access_token: string;
   /**
    *
    * @type {string}
    * @memberof Session
    */
-  refresh_token?: string;
+  refresh_token: string;
   /**
    *
    * @type {number}
    * @memberof Session
    */
-  expires_in?: number;
+  expires_in: number;
   /**
    *
    * @type {string}
    * @memberof Session
    */
-  token_type?: SessionTokenTypeEnum;
+  token_type: SessionTokenTypeEnum;
 }
 
 export const SessionTokenTypeEnum = {
@@ -253,16 +253,16 @@ export const DefaultApiAxiosParamCreator = function (
     /**
      *
      * @summary Obtain a JWT token using basic credentials
-     * @param {Basic} basic
+     * @param {BasicAuth} basicAuth
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     authLoginPost: async (
-      basic: Basic,
+      basicAuth: BasicAuth,
       options: AxiosRequestConfig = {}
     ): Promise<RequestArgs> => {
-      // verify required parameter 'basic' is not null or undefined
-      assertParamExists("authLoginPost", "basic", basic);
+      // verify required parameter 'basicAuth' is not null or undefined
+      assertParamExists("authLoginPost", "basicAuth", basicAuth);
       const localVarPath = `/auth/login`;
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -290,7 +290,7 @@ export const DefaultApiAxiosParamCreator = function (
         ...options.headers,
       };
       localVarRequestOptions.data = serializeDataIfNeeded(
-        basic,
+        basicAuth,
         localVarRequestOptions,
         configuration
       );
@@ -434,18 +434,18 @@ export const DefaultApiFp = function (configuration?: Configuration) {
     /**
      *
      * @summary Obtain a JWT token using basic credentials
-     * @param {Basic} basic
+     * @param {BasicAuth} basicAuth
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async authLoginPost(
-      basic: Basic,
+      basicAuth: BasicAuth,
       options?: AxiosRequestConfig
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Session>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.authLoginPost(
-        basic,
+        basicAuth,
         options
       );
       return createRequestFunction(
@@ -529,13 +529,13 @@ export const DefaultApiFactory = function (
     /**
      *
      * @summary Obtain a JWT token using basic credentials
-     * @param {Basic} basic
+     * @param {BasicAuth} basicAuth
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    authLoginPost(basic: Basic, options?: any): AxiosPromise<Session> {
+    authLoginPost(basicAuth: BasicAuth, options?: any): AxiosPromise<Session> {
       return localVarFp
-        .authLoginPost(basic, options)
+        .authLoginPost(basicAuth, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -588,14 +588,14 @@ export class DefaultApi extends BaseAPI {
   /**
    *
    * @summary Obtain a JWT token using basic credentials
-   * @param {Basic} basic
+   * @param {BasicAuth} basicAuth
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof DefaultApi
    */
-  public authLoginPost(basic: Basic, options?: AxiosRequestConfig) {
+  public authLoginPost(basicAuth: BasicAuth, options?: AxiosRequestConfig) {
     return DefaultApiFp(this.configuration)
-      .authLoginPost(basic, options)
+      .authLoginPost(basicAuth, options)
       .then((request) => request(this.axios, this.basePath));
   }
 

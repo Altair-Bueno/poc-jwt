@@ -14,30 +14,30 @@
 
 import { Configuration } from "./configuration";
 import globalAxios, {
-  AxiosInstance,
   AxiosPromise,
+  AxiosInstance,
   AxiosRequestConfig,
 } from "axios";
 // Some imports not used depending on template conditions
 // @ts-ignore
 import {
-  assertParamExists,
-  createRequestFunction,
   DUMMY_BASE_URL,
-  serializeDataIfNeeded,
+  assertParamExists,
   setApiKeyToObject,
   setBasicAuthToObject,
   setBearerAuthToObject,
   setOAuthToObject,
   setSearchParams,
+  serializeDataIfNeeded,
   toPathString,
+  createRequestFunction,
 } from "./common";
 // @ts-ignore
 import {
   BASE_PATH,
-  BaseAPI,
   COLLECTION_FORMATS,
   RequestArgs,
+  BaseAPI,
   RequiredError,
 } from "./base";
 
@@ -93,14 +93,16 @@ export const DefaultApiAxiosParamCreator = function (
     /**
      *
      * @summary Responds to authorised users using the same request body
-     * @param {string} [body]
+     * @param {string} body
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     rootPost: async (
-      body?: string,
+      body: string,
       options: AxiosRequestConfig = {}
     ): Promise<RequestArgs> => {
+      // verify required parameter 'body' is not null or undefined
+      assertParamExists("rootPost", "body", body);
       const localVarPath = `/`;
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -176,12 +178,12 @@ export const DefaultApiFp = function (configuration?: Configuration) {
     /**
      *
      * @summary Responds to authorised users using the same request body
-     * @param {string} [body]
+     * @param {string} body
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async rootPost(
-      body?: string,
+      body: string,
       options?: AxiosRequestConfig
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
@@ -225,11 +227,11 @@ export const DefaultApiFactory = function (
     /**
      *
      * @summary Responds to authorised users using the same request body
-     * @param {string} [body]
+     * @param {string} body
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    rootPost(body?: string, options?: any): AxiosPromise<string> {
+    rootPost(body: string, options?: any): AxiosPromise<string> {
       return localVarFp
         .rootPost(body, options)
         .then((request) => request(axios, basePath));
@@ -260,12 +262,12 @@ export class DefaultApi extends BaseAPI {
   /**
    *
    * @summary Responds to authorised users using the same request body
-   * @param {string} [body]
+   * @param {string} body
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof DefaultApi
    */
-  public rootPost(body?: string, options?: AxiosRequestConfig) {
+  public rootPost(body: string, options?: AxiosRequestConfig) {
     return DefaultApiFp(this.configuration)
       .rootPost(body, options)
       .then((request) => request(this.axios, this.basePath));

@@ -44,6 +44,25 @@ import {
 /**
  *
  * @export
+ * @interface ModelError
+ */
+export interface ModelError {
+  /**
+   *
+   * @type {string}
+   * @memberof ModelError
+   */
+  timestamp: string;
+  /**
+   *
+   * @type {string}
+   * @memberof ModelError
+   */
+  message: string;
+}
+/**
+ *
+ * @export
  * @interface Post200Response
  */
 export interface Post200Response {
@@ -52,13 +71,13 @@ export interface Post200Response {
    * @type {string}
    * @memberof Post200Response
    */
-  data?: string;
+  data: string;
   /**
    * Number of miliseconds that this request took
    * @type {number}
    * @memberof Post200Response
    */
-  took?: number;
+  took: number;
 }
 /**
  *
@@ -71,13 +90,13 @@ export interface PostRequest {
    * @type {string}
    * @memberof PostRequest
    */
-  transformation?: PostRequestTransformationEnum;
+  transformation: PostRequestTransformationEnum;
   /**
    *
    * @type {string}
    * @memberof PostRequest
    */
-  data?: string;
+  data: string;
 }
 
 export const PostRequestTransformationEnum = {

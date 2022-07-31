@@ -16,8 +16,8 @@ import { Configuration } from "./configuration";
 // Some imports not used depending on template conditions
 // @ts-ignore
 import globalAxios, {
-  AxiosInstance,
   AxiosPromise,
+  AxiosInstance,
   AxiosRequestConfig,
 } from "axios";
 
