@@ -2,6 +2,8 @@ openapi: '3.0.2'
 info:
   title: Axum transform
   version: '0.0.1'
+  license:
+    name: MIT
 servers:
   - url: http://localhost:9100
     description: Development server
@@ -25,6 +27,9 @@ paths:
                     - capitalize
                 data:
                   type: string
+            example:
+              transformation: capitalize
+              data: hello world
       responses:
         '200':
           description: OK
@@ -38,10 +43,31 @@ paths:
                   took:
                     type: number
                     description: Number of miliseconds that this request took
+              example:
+                data: HELLO WORLD
+                took: 10
         '401':
-          description: "Unauthorised: Access token is missing or invalid"
+          $ref: "#/components/responses/Unauthorised"
 
 components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        timestamp:
+          type: string
+        message:
+          type: string
+  responses:
+    Unauthorised:
+      description: Access token is missing or invalid
+      content: 
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"  
+          example:
+            timestamp: 2022-07-31T11:47:02Z
+            message: Missing authentication header
   securitySchemes:
     bearer:
       type: http
