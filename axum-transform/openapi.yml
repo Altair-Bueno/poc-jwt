@@ -19,6 +19,9 @@ paths:
         content:
           application/json:
             schema:
+              required:
+                - transformation
+                - data
               type: object
               properties:
                 transformation:
@@ -36,6 +39,9 @@ paths:
           content:
             application/json:
               schema:
+                required:
+                  - data
+                  - took
                 type: object
                 properties:
                   data:
@@ -52,6 +58,9 @@ paths:
 components:
   schemas:
     Error:
+      required:
+        - timestamp
+        - message
       type: object
       properties:
         timestamp:
