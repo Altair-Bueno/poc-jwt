@@ -1,6 +1,6 @@
 use axum::{
     async_trait,
-    extract::{rejection::ExtensionRejection, FromRequest, RequestParts},
+    extract::{FromRequest, RequestParts},
 };
 
 use crate::subject::Subject;
@@ -17,7 +17,7 @@ impl<B: Send> FromRequest<B> for Authorization {
         req.extensions()
             .get::<Subject>()
             .map(Clone::clone)
-            .ok_or(ErrorResponse::from(AuthenticationError::SubjectNotFound))
+            .ok_or_else(|| ErrorResponse::from(AuthenticationError::SubjectNotFound))
             .map(Authorization)
     }
 }

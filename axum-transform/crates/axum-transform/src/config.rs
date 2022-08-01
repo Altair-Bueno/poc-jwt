@@ -12,11 +12,11 @@ pub struct Config {
     pub hostname: IpAddr,
     #[serde(default = "default_port")]
     pub port: u16,
-    pub jwt: JWT,
+    pub jwt: Jwt,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct JWT {
+pub struct Jwt {
     pub publickey: PathBuf,
     #[serde(default = "default_algorithm")]
     pub algorithm: Algorithm,

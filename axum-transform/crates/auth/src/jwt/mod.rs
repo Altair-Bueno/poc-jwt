@@ -33,7 +33,7 @@ where
     type ResponseBody = BoxBody;
     type Future = BoxFuture<'static, Result<Request<B>, Response<Self::ResponseBody>>>;
 
-    fn authorize(&mut self, mut request: Request<B>) -> Self::Future {
+    fn authorize(&mut self, request: Request<B>) -> Self::Future {
         let clone = self.clone();
         Box::pin(async move {
             authorise(&clone, request)

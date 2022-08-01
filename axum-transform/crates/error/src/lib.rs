@@ -19,7 +19,7 @@ where
 
 impl IntoResponse for ErrorResponse {
     fn into_response(self) -> axum::response::Response {
-        let code = self.code.clone();
+        let code = self.code;
 
         (code, Json(self)).into_response()
     }

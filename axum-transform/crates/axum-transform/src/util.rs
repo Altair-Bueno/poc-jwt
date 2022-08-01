@@ -1,12 +1,9 @@
-use std::error::Error;
-
-use crate::config::{Config, Loader, JWT};
+use crate::config::Config;
 use eyre::Result;
 use figment::{
     providers::{Env, Format, Toml},
     Figment,
 };
-use jsonwebtoken::{DecodingKey, Validation};
 
 pub fn load_config() -> Result<Config> {
     let config = Figment::new()

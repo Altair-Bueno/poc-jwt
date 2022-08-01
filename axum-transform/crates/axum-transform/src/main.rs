@@ -24,7 +24,7 @@ async fn run() -> Result<()> {
     init_logger();
 
     let cwd = std::env::current_dir();
-    let log_level = std::env::var("RUST_LOG").unwrap_or("INFO".into());
+    let log_level = std::env::var("RUST_LOG").unwrap_or_else(|_| "INFO".into());
     info!(?cwd, %log_level,"Application start");
 
     let config = load_config()?;
