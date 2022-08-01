@@ -6,10 +6,9 @@ use axum::{
 };
 use claims::Claims;
 use error::{auth::AuthenticationError, ErrorResponse};
-use futures_util::future::BoxFuture;
 use jsonwebtoken::{decode, DecodingKey, Validation};
 use std::sync::Arc;
-use tower_http::auth::AsyncAuthorizeRequest;
+use tower_http::auth::AuthorizeRequest;
 
 use crate::subject::Subject;
 
@@ -25,29 +24,19 @@ impl JwtAuthentication {
     }
 }
 
-impl<B> AsyncAuthorizeRequest<B> for JwtAuthentication
-where
-    B: Send + Sync + 'static,
-{
-    type RequestBody = B;
+impl<B> AuthorizeRequest<B> for JwtAuthentication {
     type ResponseBody = BoxBody;
-    type Future = BoxFuture<'static, Result<Request<B>, Response<Self::ResponseBody>>>;
-
-    fn authorize(&mut self, request: Request<B>) -> Self::Future {
-        let clone = self.clone();
-        Box::pin(async move {
-            authorise(&clone, request)
-                .await
-                .map_err(ErrorResponse::from)
-                .map_err(IntoResponse::into_response)
-        })
+    fn authorize(&mut self, request: &mut Request<B>) -> Result<(), Response<Self::ResponseBody>> {
+        authorise(self, request)
+            .map_err(ErrorResponse::from)
+            .map_err(IntoResponse::into_response)
     }
 }
 
-async fn authorise<B>(
+fn authorise<B>(
     jwtauth: &JwtAuthentication,
-    mut request: Request<B>,
-) -> Result<Request<B>, AuthenticationError> {
+    request: &mut Request<B>,
+) -> Result<(), AuthenticationError> {
     let token = request
         .headers()
         .get(AUTHORIZATION)
@@ -64,6 +53,5 @@ async fn authorise<B>(
     let subject = Subject::from(claims);
 
     let _ignore = request.extensions_mut().insert(subject);
-
-    Ok(request)
+    Ok(())
 }

@@ -12,4 +12,3 @@ jsonwebtoken = "8.1.1"
 axum = { version = "0.5.12"}
 tower-http = { version = "0.3.4", features = ["auth"] }
 thiserror = "1.0.31"
-futures-util = "0.3.21"

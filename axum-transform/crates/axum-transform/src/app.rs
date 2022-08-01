@@ -9,7 +9,7 @@ use services::transform::{StdTransform, TransformService};
 use tokio::fs::read;
 use tower::ServiceBuilder;
 use tower_http::{
-    auth::AsyncRequireAuthorizationLayer, compression::CompressionLayer, cors::CorsLayer,
+    auth::RequireAuthorizationLayer, compression::CompressionLayer, cors::CorsLayer,
     trace::TraceLayer,
 };
 
@@ -33,7 +33,7 @@ pub async fn app(config: &Config) -> Result<Router> {
     let decodingkey = load_decoding_key(config).await?;
     let validation = load_validation(config).await?;
 
-    let async_require_authorization = JwtAuthentication::new(decodingkey, validation);
+    let auth = JwtAuthentication::new(decodingkey, validation);
 
     let transform = Arc::new(StdTransform::new()) as TransformService;
     let middleware = ServiceBuilder::new()
@@ -41,9 +41,7 @@ pub async fn app(config: &Config) -> Result<Router> {
         .layer(Extension(transform))
         .layer(TraceLayer::new_for_http())
         .layer(CompressionLayer::new())
-        .layer(AsyncRequireAuthorizationLayer::new(
-            async_require_authorization,
-        ))
+        .layer(RequireAuthorizationLayer::custom(auth))
         .layer(CorsLayer::permissive());
     let controller = controller::router();
     let app = Router::new().nest("/", controller).layer(middleware);
